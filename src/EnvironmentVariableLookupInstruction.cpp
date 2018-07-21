@@ -1,4 +1,4 @@
-#include "include/EnvironmentVariableLookupInstruction.h"
+#include "EnvironmentVariableLookupInstruction.h"
 #include <cstring>
 
 const opcode_t &EnvironmentVariableLookupInstruction::get_opcode() {

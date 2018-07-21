@@ -1,4 +1,4 @@
-#include "include/Instruction.h"
+#include "Instruction.h"
 
 const opcode_t Instruction::OPCODE_NULL = "nul";
 const opcode_t Instruction::OPCODE_FUNCTION_ENTRY = "fnb";

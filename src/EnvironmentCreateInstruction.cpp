@@ -1,4 +1,4 @@
-#include "include/EnvironmentCreateInstruction.h"
+#include "EnvironmentCreateInstruction.h"
 
 const opcode_t &EnvironmentCreateInstruction::get_opcode() {
     return Instruction::OPCODE_ENVIRONMENT_CREATE;

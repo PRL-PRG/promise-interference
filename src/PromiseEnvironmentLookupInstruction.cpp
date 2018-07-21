@@ -1,4 +1,4 @@
-#include "include/PromiseEnvironmentLookupInstruction.h"
+#include "PromiseEnvironmentLookupInstruction.h"
 
 const opcode_t &PromiseEnvironmentLookupInstruction::get_opcode() {
     return Instruction::OPCODE_PROMISE_ENVIRONMENT_LOOKUP;

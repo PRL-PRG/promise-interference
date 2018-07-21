@@ -1,5 +1,5 @@
-#include "include/InstructionStream.h"
-#include "include/utilities.h"
+#include "InstructionStream.h"
+#include "utilities.h"
 
 instruction_t InstructionStream::parse_instruction(const char *begin,
                                                    char **end) {

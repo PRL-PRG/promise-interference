@@ -1,4 +1,4 @@
-#include "include/AbstractInterpreter.h"
+#include "AbstractInterpreter.h"
 
 void interpret(const instruction_t &instruction, AbstractState &state) {
     std::visit([&](auto const &i) { i.interpret(state); }, instruction);

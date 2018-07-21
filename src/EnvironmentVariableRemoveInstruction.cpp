@@ -1,4 +1,4 @@
-#include "include/EnvironmentVariableRemoveInstruction.h"
+#include "EnvironmentVariableRemoveInstruction.h"
 #include <cstring>
 
 const opcode_t &EnvironmentVariableRemoveInstruction::get_opcode() {

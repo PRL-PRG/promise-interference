@@ -1,4 +1,4 @@
-#include "include/EnvironmentVariableDefineInstruction.h"
+#include "EnvironmentVariableDefineInstruction.h"
 #include <cstring>
 
 const opcode_t &EnvironmentVariableDefineInstruction::get_opcode() {

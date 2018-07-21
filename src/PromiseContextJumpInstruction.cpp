@@ -1,4 +1,4 @@
-#include "include/PromiseContextJumpInstruction.h"
+#include "PromiseContextJumpInstruction.h"
 
 const opcode_t &PromiseContextJumpInstruction::get_opcode() {
     return Instruction::OPCODE_PROMISE_CONTEXT_JUMP;

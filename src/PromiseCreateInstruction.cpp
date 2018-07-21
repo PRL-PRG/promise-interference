@@ -1,4 +1,4 @@
-#include "include/PromiseCreateInstruction.h"
+#include "PromiseCreateInstruction.h"
 
 const opcode_t &PromiseCreateInstruction::get_opcode() {
     return Instruction::OPCODE_PROMISE_CREATE;

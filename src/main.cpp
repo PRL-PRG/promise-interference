@@ -1,6 +1,6 @@
-#include "include/AbstractInterpreter.h"
-#include "include/AbstractState.h"
-#include "include/InstructionStream.h"
+#include "AbstractInterpreter.h"
+#include "AbstractState.h"
+#include "InstructionStream.h"
 #include <chrono>
 #include <cstdlib>
 #include <fstream>

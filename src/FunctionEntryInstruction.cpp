@@ -1,4 +1,4 @@
-#include "include/FunctionEntryInstruction.h"
+#include "FunctionEntryInstruction.h"
 #include <cstring>
 
 const opcode_t &FunctionEntryInstruction::get_opcode() {

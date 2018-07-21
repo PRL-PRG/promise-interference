@@ -1,4 +1,4 @@
-#include "include/NullInstruction.h"
+#include "NullInstruction.h"
 
 const opcode_t &NullInstruction::get_opcode() {
     return Instruction::OPCODE_NULL;

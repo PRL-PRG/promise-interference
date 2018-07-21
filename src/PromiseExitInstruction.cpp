@@ -1,4 +1,4 @@
-#include "include/PromiseExitInstruction.h"
+#include "PromiseExitInstruction.h"
 
 const opcode_t &PromiseExitInstruction::get_opcode() {
     return Instruction::OPCODE_PROMISE_EXIT;

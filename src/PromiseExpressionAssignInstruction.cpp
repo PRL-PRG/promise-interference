@@ -1,4 +1,4 @@
-#include "include/PromiseExpressionAssignInstruction.h"
+#include "PromiseExpressionAssignInstruction.h"
 
 const opcode_t &PromiseExpressionAssignInstruction::get_opcode() {
     return Instruction::OPCODE_PROMISE_EXPRESSION_ASSIGN;

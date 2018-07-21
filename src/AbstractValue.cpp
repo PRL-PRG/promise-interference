@@ -1,4 +1,4 @@
-#include "include/AbstractValue.h"
+#include "AbstractValue.h"
 
 std::ostream &operator<<(std::ostream &os,
                          const AbstractValue &abstract_value) {

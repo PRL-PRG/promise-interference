@@ -1,4 +1,4 @@
-#include "include/FunctionScope.h"
+#include "FunctionScope.h"
 
 std::ostream &operator<<(std::ostream &os,
                          const FunctionScope &function_scope) {

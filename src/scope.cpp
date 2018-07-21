@@ -1,4 +1,4 @@
-#include "include/scope.h"
+#include "scope.h"
 
 std::string scope_to_string(const scope_t &scope) {
     std::string scope_string;

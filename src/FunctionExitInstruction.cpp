@@ -1,4 +1,4 @@
-#include "include/FunctionExitInstruction.h"
+#include "FunctionExitInstruction.h"
 #include <cstring>
 
 const opcode_t &FunctionExitInstruction::get_opcode() {

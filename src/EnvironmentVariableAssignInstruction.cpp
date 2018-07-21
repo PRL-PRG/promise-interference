@@ -1,5 +1,5 @@
-#include "include/EnvironmentVariableAssignInstruction.h"
-#include "include/utilities.h"
+#include "EnvironmentVariableAssignInstruction.h"
+#include "utilities.h"
 #include <cstring>
 
 const opcode_t &EnvironmentVariableAssignInstruction::get_opcode() {

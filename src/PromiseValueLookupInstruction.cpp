@@ -1,4 +1,4 @@
-#include "include/PromiseValueLookupInstruction.h"
+#include "PromiseValueLookupInstruction.h"
 
 const opcode_t &PromiseValueLookupInstruction::get_opcode() {
     return Instruction::OPCODE_PROMISE_VALUE_LOOKUP;

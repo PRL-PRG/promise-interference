@@ -1,4 +1,4 @@
-#include "include/PromiseEnvironmentAssignInstruction.h"
+#include "PromiseEnvironmentAssignInstruction.h"
 
 const opcode_t &PromiseEnvironmentAssignInstruction::get_opcode() {
     return Instruction::OPCODE_PROMISE_ENVIRONMENT_ASSIGN;

@@ -1,4 +1,4 @@
-#include "include/PromiseValueAssignInstruction.h"
+#include "PromiseValueAssignInstruction.h"
 
 const opcode_t &PromiseValueAssignInstruction::get_opcode() {
     return Instruction::OPCODE_PROMISE_VALUE_ASSIGN;

@@ -1,21 +1,40 @@
-CC = gcc
-CXX = g++
-RM = rm -rf
-CPPFLAGS = -g -std=c++17 -I.
-LDFLAGS = -g
-LDLIBS = -lstdc++fs
-SRCDIR = src
-BINDIR = bin
-SOURCES = $(shell ls $(SRCDIR)/*)
+CC := gcc
+CXX := g++
+RM := rm -rf
+MKDIR_P := mkdir -p
 CLANG_TIDY := clang-tidy
 
-all: $(BINDIR)/interference
+TARGET_EXECUTABLE := interference
 
-$(BINDIR)/interference: clean
-	mkdir -p $(BINDIR)
-	$(CXX) $(CPPFLAGS) $(LDFLAGS) $(SOURCES) -o $(BINDIR)/interference $(LDLIBS)
+SOURCE_DIR := ./src
+BUILD_DIR := ./build
+INCLUDE_DIR := ./include
+
+CPPFLAGS := -std=c++17 -I$(INCLUDE_DIR) -MMD -MP
+LDFLAGS := -g -lstdc++ -lstdc++fs
+
+SOURCES := $(shell find $(SOURCE_DIR) -name *.cpp)
+OBJECTS := $(patsubst $(SOURCE_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SOURCES))
+DEPENDS := $(patsubst %.o,%.d,$(OBJECTS))
+
+$(BUILD_DIR)/$(TARGET_EXECUTABLE): $(BUILD_DIR) $(OBJECTS)
+	$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
+
+$(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+
+$(BUILD_DIR):
+	$(MKDIR_P) $(BUILD_DIR)
 
 clean:
-	$(RM) $(BINDIR)
+	$(RM) $(BUILD_DIR)
 
-.PHONY: all clean
+compilation_database: clean
+	intercept-build make
+
+analyze:
+	$(CLANG_TIDY) -p . src/*.cpp
+
+.PHONY: clean
+
+-include $(DEPENDS)
