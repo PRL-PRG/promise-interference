@@ -15,7 +15,8 @@ class FunctionContextJumpInstruction : public Instruction {
 
     std::string to_string() const override {
         std::stringstream stream;
-        stream << get_opcode() << UNIT_SEPARATOR << get_call_id();
+        stream << get_opcode() << UNIT_SEPARATOR << get_call_id()
+               << RECORD_SEPARATOR;
         return stream.str();
     }
 

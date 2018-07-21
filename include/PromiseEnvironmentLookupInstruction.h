@@ -14,7 +14,7 @@ class PromiseEnvironmentLookupInstruction
     std::string to_string() const override {
         std::stringstream stream;
         stream << get_opcode() << UNIT_SEPARATOR << get_id() << UNIT_SEPARATOR
-               << get_environment_id();
+               << get_environment_id() << RECORD_SEPARATOR;
         return stream.str();
     }
 

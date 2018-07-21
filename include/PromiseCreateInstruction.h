@@ -23,7 +23,8 @@ class PromiseCreateInstruction : public Instruction {
     std::string to_string() const override {
         std::stringstream stream;
         stream << get_opcode() << UNIT_SEPARATOR << get_id() << UNIT_SEPARATOR
-               << get_environment_id() << UNIT_SEPARATOR << get_expression();
+               << get_environment_id() << UNIT_SEPARATOR << get_expression()
+               << RECORD_SEPARATOR;
         return stream.str();
     }
 

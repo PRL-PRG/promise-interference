@@ -13,7 +13,7 @@ class PromiseExpressionAssignInstruction : public PromiseExpressionInstruction {
     std::string to_string() const override {
         std::stringstream stream;
         stream << get_opcode() << UNIT_SEPARATOR << get_id() << UNIT_SEPARATOR
-               << get_expression();
+               << get_expression() << RECORD_SEPARATOR;
         return stream.str();
     }
 

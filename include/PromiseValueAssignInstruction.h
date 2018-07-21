@@ -13,7 +13,7 @@ class PromiseValueAssignInstruction : public PromiseValueInstruction {
     std::string to_string() const override {
         std::stringstream stream;
         stream << get_opcode() << UNIT_SEPARATOR << get_id() << UNIT_SEPARATOR
-               << get_value_type();
+               << get_value_type() << RECORD_SEPARATOR;
         return stream.str();
     }
 

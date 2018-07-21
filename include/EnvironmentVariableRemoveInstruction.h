@@ -15,7 +15,7 @@ class EnvironmentVariableRemoveInstruction
         std::stringstream stream;
         stream << get_opcode() << UNIT_SEPARATOR << get_id() << UNIT_SEPARATOR
                << get_variable().get_id() << UNIT_SEPARATOR
-               << get_variable().get_name();
+               << get_variable().get_name() << RECORD_SEPARATOR;
         return stream.str();
     }
 

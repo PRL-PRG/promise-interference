@@ -28,7 +28,7 @@ class FunctionEntryInstruction : public Instruction {
         std::stringstream stream;
         stream << get_opcode() << UNIT_SEPARATOR << get_type() << UNIT_SEPARATOR
                << get_id() << UNIT_SEPARATOR << get_call_id() << UNIT_SEPARATOR
-               << get_environment_id();
+               << get_environment_id() << RECORD_SEPARATOR;
         return stream.str();
     }
 

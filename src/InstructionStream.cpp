@@ -144,8 +144,7 @@ std::string instruction_to_string(const instruction_t &instruction) {
 std::ostream &operator<<(std::ostream &os,
                          const InstructionStream &instruction_stream) {
     for (const instruction_t &instruction : instruction_stream) {
-        // TODO - move RECORD_SEPARATOR to end of each isntruction.
-        os << instruction << RECORD_SEPARATOR << std::endl;
+        os << instruction << std::endl;
     }
     return os;
 }
