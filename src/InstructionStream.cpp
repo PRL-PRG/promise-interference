@@ -134,18 +134,6 @@ InstructionStream::parse(std::filesystem::path instruction_filepath) {
     return InstructionStream{std::move(instructions)};
 }
 
-std::ostream &operator<<(std::ostream &os, const instruction_t &instruction) {
-    std::visit([&](auto const &i) { os << i.to_string(); }, instruction);
-    return os;
-}
-
-std::string instruction_to_string(const instruction_t &instruction) {
-    std::string instruction_string;
-    std::visit([&](auto const &i) { instruction_string = i.to_string(); },
-               instruction);
-    return instruction_string;
-}
-
 std::ostream &operator<<(std::ostream &os,
                          const InstructionStream &instruction_stream) {
     for (const instruction_t &instruction : instruction_stream) {

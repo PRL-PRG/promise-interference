@@ -36,7 +36,12 @@ using instruction_t = std::variant<
     EnvironmentVariableAssignInstruction, EnvironmentVariableRemoveInstruction,
     EnvironmentVariableDefineInstruction, EnvironmentVariableLookupInstruction>;
 
-std::string instruction_to_string(const instruction_t &instruction);
+inline std::string instruction_to_string(const instruction_t &instruction) {
+    std::string instruction_string;
+    std::visit([&](auto const &i) { instruction_string = i.to_string(); },
+               instruction);
+    return instruction_string;
+}
 
 inline void set_line_number(instruction_t &instruction,
                             std::size_t line_number) {
@@ -50,7 +55,11 @@ inline std::size_t get_line_number(const instruction_t &instruction) {
     return line_number;
 }
 
-std::ostream &operator<<(std::ostream &os, const instruction_t &instruction);
+inline std::ostream &operator<<(std::ostream &os,
+                                const instruction_t &instruction) {
+    std::visit([&](auto const &i) { os << i.to_string(); }, instruction);
+    return os;
+}
 
 class InstructionStream {
   public:
