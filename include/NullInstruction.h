@@ -4,7 +4,7 @@
 #include "Instruction.h"
 #include <sstream>
 
-class NullInstruction : Instruction {
+class NullInstruction : public Instruction {
 
   public:
     explicit NullInstruction() : Instruction{} {}

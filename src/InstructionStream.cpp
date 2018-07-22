@@ -116,11 +116,16 @@ InstructionStream::parse(std::filesystem::path instruction_filepath) {
     char *current = static_cast<char *>(data);
     char *end = current + size;
     char *next;
+    instruction_t instruction;
     std::vector<instruction_t> instructions;
     instructions.reserve(size / (Instruction::MINIMUM_INSTRUCTION_LENGTH + 1));
+    size_t line_number = 0;
 
     while (current != end) {
-        instructions.push_back(parse_instruction(current, &next));
+        instruction = parse_instruction(current, &next);
+        set_line_number(instruction, line_number);
+        instructions.push_back(instruction);
+        ++line_number;
         current = next + 2;
     }
 

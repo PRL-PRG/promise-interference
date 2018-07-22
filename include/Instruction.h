@@ -3,6 +3,7 @@
 
 #include "AbstractState.h"
 #include "utilities.h"
+#include <limits>
 #include <string>
 
 class Instruction {
@@ -29,11 +30,16 @@ class Instruction {
     static const size_t MINIMUM_INSTRUCTION_LENGTH;
 
   public:
-    explicit Instruction() {}
+    explicit Instruction()
+        : line_number_{std::numeric_limits<std::size_t>::max()} {}
 
     virtual std::string to_string() const = 0;
 
     virtual void interpret(AbstractState &state) const = 0;
+
+    void set_line_number(size_t line_number) { line_number_ = line_number; }
+
+    size_t get_line_number() const { return line_number_; }
 
     virtual ~Instruction() {}
 
@@ -59,6 +65,9 @@ class Instruction {
     static T parse_arguments(const char *begin, char **end) {
         return T::parse_arguments(begin, end);
     }
+
+  private:
+    size_t line_number_;
 };
 
 #endif /* PROMISE_INTERFERENCE_INSTRUCTION_H */
