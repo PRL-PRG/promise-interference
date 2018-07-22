@@ -119,7 +119,7 @@ InstructionStream::parse(std::filesystem::path instruction_filepath) {
     instruction_t instruction;
     std::vector<instruction_t> instructions;
     instructions.reserve(size / (Instruction::MINIMUM_INSTRUCTION_LENGTH + 1));
-    size_t line_number = 0;
+    std::size_t line_number = 0;
 
     while (current != end) {
         instruction = parse_instruction(current, &next);

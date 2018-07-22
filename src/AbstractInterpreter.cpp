@@ -9,7 +9,7 @@ AbstractState
 AbstractInterpreter::interpret(const InstructionStream &instruction_stream) {
     AbstractState state{};
 
-    size_t instruction_number = 0;
+    std::size_t instruction_number = 0;
     try {
         for (const auto &instruction : instruction_stream) {
             interpret(instruction, state);

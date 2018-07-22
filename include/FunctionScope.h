@@ -54,7 +54,7 @@ template <> struct hash<FunctionScope> {
 
     std::size_t operator()(const FunctionScope &function_scope) const {
         // http://stackoverflow.com/a/1646913/126995
-        size_t res = 17;
+        std::size_t res = 17;
         res = res * 31 + std::hash<sexp_type_t>()(function_scope.get_type());
         res = res * 31 + std::hash<function_id_t>()(function_scope.get_id());
         res = res * 31 + std::hash<call_id_t>()(function_scope.get_call_id());

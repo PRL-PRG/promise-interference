@@ -45,10 +45,10 @@ namespace std {
 
 template <> struct hash<Variable> {
 
-    size_t operator()(const Variable &variable) const {
+    std::size_t operator()(const Variable &variable) const {
         // Compute individual hash values for first, second and third
         // http://stackoverflow.com/a/1646913/126995
-        size_t res = 17;
+        std::size_t res = 17;
         res = res * 31 + std::hash<variable_id_t>()(variable.get_id());
         res = res * 31 + std::hash<variable_name_t>()(variable.get_name());
         return res;

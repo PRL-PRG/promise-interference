@@ -17,15 +17,15 @@ using sexp_type_t = std::string;
 using variable_id_t = int;
 using expression_t = std::string;
 
-std::pair<void *, size_t> mmap_file(const std::string &filepath);
+std::pair<void *, std::size_t> mmap_file(const std::string &filepath);
 
-void munmap_file(void *data, size_t size);
+void munmap_file(void *data, std::size_t size);
 
 extern const char RECORD_SEPARATOR;
 extern const char UNIT_SEPARATOR;
 
 static inline std::string parse_upto_separator(const char *begin, char **end) {
-    size_t size = 0;
+    std::size_t size = 0;
 
     while (begin[size] != RECORD_SEPARATOR && begin[size] != UNIT_SEPARATOR)
         ++size;

@@ -19,4 +19,4 @@ const opcode_t Instruction::OPCODE_ENVIRONMENT_VARIABLE_ASSIGN = "ena";
 const opcode_t Instruction::OPCODE_ENVIRONMENT_VARIABLE_REMOVE = "enr";
 const opcode_t Instruction::OPCODE_ENVIRONMENT_VARIABLE_DEFINE = "end";
 const opcode_t Instruction::OPCODE_ENVIRONMENT_VARIABLE_LOOKUP = "enl";
-const size_t Instruction::MINIMUM_INSTRUCTION_LENGTH = 6;
+const std::size_t Instruction::MINIMUM_INSTRUCTION_LENGTH = 6;

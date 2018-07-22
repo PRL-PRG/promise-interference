@@ -10,7 +10,7 @@
 const char RECORD_SEPARATOR = 0x1e;
 const char UNIT_SEPARATOR = 0x1f;
 
-std::pair<void *, size_t> mmap_file(const std::string &filepath) {
+std::pair<void *, std::size_t> mmap_file(const std::string &filepath) {
 
     int descriptor = open(filepath.c_str(), O_RDONLY);
 
@@ -44,7 +44,7 @@ std::pair<void *, size_t> mmap_file(const std::string &filepath) {
     return {data, file_info.st_size};
 }
 
-void munmap_file(void *data, size_t size) {
+void munmap_file(void *data, std::size_t size) {
     if (munmap(data, size)) {
         perror("Error munmapping the file");
         exit(EXIT_FAILURE);

@@ -24,7 +24,7 @@ namespace std {
 template <> struct hash<TopLevelScope> {
     std::size_t operator()(const TopLevelScope &top_level_scope) const {
         // http://stackoverflow.com/a/1646913/126995
-        size_t res = 17;
+        std::size_t res = 17;
         return res;
     }
 };

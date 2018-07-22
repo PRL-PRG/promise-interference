@@ -27,7 +27,7 @@ class Instruction {
     static const opcode_t OPCODE_ENVIRONMENT_VARIABLE_REMOVE;
     static const opcode_t OPCODE_ENVIRONMENT_VARIABLE_DEFINE;
     static const opcode_t OPCODE_ENVIRONMENT_VARIABLE_LOOKUP;
-    static const size_t MINIMUM_INSTRUCTION_LENGTH;
+    static const std::size_t MINIMUM_INSTRUCTION_LENGTH;
 
   public:
     explicit Instruction()
@@ -37,9 +37,9 @@ class Instruction {
 
     virtual void interpret(AbstractState &state) const = 0;
 
-    void set_line_number(size_t line_number) { line_number_ = line_number; }
+    void set_line_number(std::size_t line_number) { line_number_ = line_number; }
 
-    size_t get_line_number() const { return line_number_; }
+    std::size_t get_line_number() const { return line_number_; }
 
     virtual ~Instruction() {}
 
@@ -67,7 +67,7 @@ class Instruction {
     }
 
   private:
-    size_t line_number_;
+    std::size_t line_number_;
 };
 
 #endif /* PROMISE_INTERFERENCE_INSTRUCTION_H */

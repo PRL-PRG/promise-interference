@@ -38,12 +38,13 @@ using instruction_t = std::variant<
 
 std::string instruction_to_string(const instruction_t &instruction);
 
-inline void set_line_number(instruction_t &instruction, size_t line_number) {
+inline void set_line_number(instruction_t &instruction,
+                            std::size_t line_number) {
     std::visit([&](auto &i) { i.set_line_number(line_number); }, instruction);
 }
 
-inline size_t get_line_number(const instruction_t &instruction) {
-    size_t line_number;
+inline std::size_t get_line_number(const instruction_t &instruction) {
+    std::size_t line_number;
     std::visit([&](const auto &i) { line_number = i.get_line_number(); },
                instruction);
     return line_number;
@@ -75,7 +76,7 @@ class InstructionStream {
         return instructions_[pos];
     }
 
-    size_t size() const { return instructions_.size(); }
+    size_type size() const { return instructions_.size(); }
 
     iterator begin() { return instructions_.begin(); }
 

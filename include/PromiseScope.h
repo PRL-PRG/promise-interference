@@ -34,9 +34,9 @@ namespace std {
 
 template <> struct hash<PromiseScope> {
 
-    size_t operator()(const PromiseScope &promise_scope) const {
+    std::size_t operator()(const PromiseScope &promise_scope) const {
         // http://stackoverflow.com/a/1646913/126995
-        size_t res = 17;
+        std::size_t res = 17;
         res = res * 31 + std::hash<promise_id_t>()(promise_scope.get_id());
         return res;
     }
