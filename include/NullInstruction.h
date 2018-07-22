@@ -15,7 +15,10 @@ class NullInstruction : public Instruction {
         return stream.str();
     };
 
-    void interpret(AbstractState &state) const {};
+    void interpret(AbstractState &state) const override {
+        std::cerr << "Null instruction encountered" << std::endl;
+        exit(EXIT_FAILURE);
+    };
 
     static const opcode_t &get_opcode();
 
