@@ -48,10 +48,7 @@ class EnvironmentVariableLookupInstruction
                 get_variable(),
                 AbstractValue{TopLevelScope{}, get_value_type()});
         } else {
-            std::cerr << "variable absent" << std::endl;
-            std::cerr << "expected: " << get_variable() << std::endl;
-            std::cerr << "but is not present in the bindings." << std::endl;
-            // exit(EXIT_FAILURE);
+            state.add_free_variable(get_variable());
         }
     }
 

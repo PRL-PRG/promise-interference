@@ -24,49 +24,48 @@ int main(int argc, char *argv[]) {
     }
 
     std::string lazy_trace_filepath{argv[1]};
-    std::string eager_trace_filepath{argv[2]};
+    std::string strict_trace_filepath{argv[2]};
     std::string trace_comparison_filepath{argv[3]};
 
     high_resolution_clock::time_point t1, t2;
-    duration<double> time_span;
 
-    std::cerr << "Reading from '" << lazy_trace_filepath << "' : ";
     t1 = high_resolution_clock::now();
-    auto instruction_stream{InstructionStream::parse(lazy_trace_filepath)};
+    auto lazy_stream{InstructionStream::parse(lazy_trace_filepath)};
     t2 = high_resolution_clock::now();
-    time_span = duration_cast<duration<double>>(t2 - t1);
-    std::cerr << time_span.count() << " seconds" << std::endl;
 
-    std::cerr << "Interpreting " << instruction_stream.size()
-              << " instructions : ";
+    std::cout << lazy_stream.size() << " "
+              << duration_cast<duration<double>>(t2 - t1).count() << " "
+              << std::flush;
+
     t1 = high_resolution_clock::now();
-    auto abstract_state{AbstractInterpreter::interpret(instruction_stream)};
+    auto abstract_state{AbstractInterpreter::interpret(lazy_stream)};
     t2 = high_resolution_clock::now();
-    time_span = duration_cast<duration<double>>(t2 - t1);
-    std::cerr << time_span.count() << " seconds" << std::endl;
 
-    std::cerr << "Rewriting instructions : ";
+    std::cout << duration_cast<duration<double>>(t2 - t1).count() << " "
+              << std::flush;
+
     t1 = high_resolution_clock::now();
-    auto strict_stream{analysis::strictness::rewrite(instruction_stream)};
+    auto strict_stream{analysis::strictness::rewrite(lazy_stream)};
     t2 = high_resolution_clock::now();
-    time_span = duration_cast<duration<double>>(t2 - t1);
-    std::cerr << time_span.count() << " seconds" << std::endl;
 
-    std::cerr << "Interpreting " << strict_stream.size() << " instructions : ";
+    std::cout << strict_stream.size() << " "
+              << duration_cast<duration<double>>(t2 - t1).count() << " "
+              << std::flush;
+
     t1 = high_resolution_clock::now();
     auto strict_state{AbstractInterpreter::interpret(strict_stream)};
     t2 = high_resolution_clock::now();
-    time_span = duration_cast<duration<double>>(t2 - t1);
-    std::cerr << time_span.count() << " seconds" << std::endl;
 
-    std::cerr << "Writing to '" << eager_trace_filepath << "' : ";
+    std::cout << duration_cast<duration<double>>(t2 - t1).count() << " "
+              << std::flush;
+
     t1 = high_resolution_clock::now();
-    std::ofstream eager_trace_file{eager_trace_filepath};
-    eager_trace_file << strict_stream;
-    eager_trace_file.close();
+    std::ofstream strict_trace_file{strict_trace_filepath};
+    strict_trace_file << strict_stream;
+    strict_trace_file.close();
     t2 = high_resolution_clock::now();
-    time_span = duration_cast<duration<double>>(t2 - t1);
-    std::cerr << time_span.count() << " seconds" << std::endl;
+
+    std::cout << duration_cast<duration<double>>(t2 - t1).count() << std::endl;
 
     return EXIT_SUCCESS;
 }

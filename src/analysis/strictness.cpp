@@ -133,8 +133,6 @@ InstructionStream rewrite(const InstructionStream &lazy_stream) {
         strict_stream.push_back(instruction);
         copied[lazy_index] = true;
 
-        std::cerr << lazy_index << " " << instruction << std::endl;
-
         if (std::holds_alternative<PromiseCreateInstruction>(instruction)) {
 
             const auto &prc{std::get<PromiseCreateInstruction>(instruction)};

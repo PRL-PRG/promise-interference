@@ -6,6 +6,7 @@
 #include "scope.h"
 #include <optional>
 #include <unordered_map>
+#include <unordered_set>
 #include <variant>
 #include <vector>
 
@@ -28,22 +29,24 @@ class AbstractState {
         bindings_.insert_or_assign(variable, abstract_value);
     }
 
-    const AbstractValue remove_variable(const Variable &variable) {
+    void remove_variable(const Variable &variable) {
 
         auto iter{bindings_.find(variable)};
 
         if (iter == bindings_.end()) {
-            std::cerr << "variable absent" << std::endl;
-            std::cerr << "expected: " << variable << std::endl;
-            std::cerr << "but is not present in the bindings." << std::endl;
-            exit(EXIT_FAILURE);
+            add_free_variable(variable);
+            // std::cerr << "variable absent" << std::endl;
+            // std::cerr << "expected: " << variable << std::endl;
+            // std::cerr << "but is not present in the bindings." << std::endl;
+            // TODO - handle this case appropriately.
+        } else {
+
+            // AbstractValue abstract_value{iter->second};
+
+            bindings_.erase(iter);
+
+            // return abstract_value;
         }
-
-        AbstractValue abstract_value{iter->second};
-
-        bindings_.erase(iter);
-
-        return abstract_value;
     }
 
     std::optional<AbstractValue> lookup_variable(const Variable &variable) {
@@ -69,6 +72,10 @@ class AbstractState {
         }
     }
 
+    void add_free_variable(const Variable &variable) {
+        free_variables_.insert(variable);
+    }
+
   private:
     template <typename T> void associate_lookup_() {}
     std::vector<scope_t> scope_stack_;
@@ -76,6 +83,7 @@ class AbstractState {
     std::unordered_map<scope_t,
                        std::unordered_map<Variable, std::vector<AbstractValue>>>
         lookups_;
+    std::unordered_set<Variable> free_variables_;
 };
 
 #endif /* PROMISE_INTERFERENCE_ABSTRACT_STATE_H */
