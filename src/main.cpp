@@ -1,6 +1,7 @@
 #include "AbstractInterpreter.h"
 #include "AbstractState.h"
 #include "InstructionStream.h"
+#include "analysis.h"
 #include <chrono>
 #include <cstdlib>
 #include <fstream>
@@ -36,19 +37,33 @@ int main(int argc, char *argv[]) {
     time_span = duration_cast<duration<double>>(t2 - t1);
     std::cerr << time_span.count() << " seconds" << std::endl;
 
-    std::cerr << "Writing to '" << eager_trace_filepath << "' : ";
-    t1 = high_resolution_clock::now();
-    std::ofstream eager_trace_file{eager_trace_filepath};
-    eager_trace_file << instruction_stream;
-    eager_trace_file.close();
-    t2 = high_resolution_clock::now();
-    time_span = duration_cast<duration<double>>(t2 - t1);
-    std::cerr << time_span.count() << " seconds" << std::endl;
-
     std::cerr << "Interpreting " << instruction_stream.size()
               << " instructions : ";
     t1 = high_resolution_clock::now();
     auto abstract_state{AbstractInterpreter::interpret(instruction_stream)};
+    t2 = high_resolution_clock::now();
+    time_span = duration_cast<duration<double>>(t2 - t1);
+    std::cerr << time_span.count() << " seconds" << std::endl;
+
+    std::cerr << "Rewriting instructions : ";
+    t1 = high_resolution_clock::now();
+    auto strict_stream{analysis::strictness::rewrite(instruction_stream)};
+    t2 = high_resolution_clock::now();
+    time_span = duration_cast<duration<double>>(t2 - t1);
+    std::cerr << time_span.count() << " seconds" << std::endl;
+
+    std::cerr << "Interpreting " << strict_stream.size() << " instructions : ";
+    t1 = high_resolution_clock::now();
+    auto strict_state{AbstractInterpreter::interpret(strict_stream)};
+    t2 = high_resolution_clock::now();
+    time_span = duration_cast<duration<double>>(t2 - t1);
+    std::cerr << time_span.count() << " seconds" << std::endl;
+
+    std::cerr << "Writing to '" << eager_trace_filepath << "' : ";
+    t1 = high_resolution_clock::now();
+    std::ofstream eager_trace_file{eager_trace_filepath};
+    eager_trace_file << strict_stream;
+    eager_trace_file.close();
     t2 = high_resolution_clock::now();
     time_span = duration_cast<duration<double>>(t2 - t1);
     std::cerr << time_span.count() << " seconds" << std::endl;

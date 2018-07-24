@@ -118,7 +118,8 @@ InstructionStream::parse(std::filesystem::path instruction_filepath) {
     char *next;
     instruction_t instruction;
     std::vector<instruction_t> instructions;
-    instructions.reserve(size / (Instruction::MINIMUM_INSTRUCTION_LENGTH + 1));
+    std::size_t instruction_count{count_instructions(current, end)};
+    instructions.reserve(instruction_count);
     std::size_t line_number = 0;
 
     while (current != end) {

@@ -70,8 +70,18 @@ class InstructionStream {
         std::vector<instruction_t>::const_reverse_iterator;
     using size_type = std::vector<instruction_t>::size_type;
 
+    explicit InstructionStream(size_type capacity) : instructions_{} {
+        instructions_.reserve(capacity);
+    }
+
     explicit InstructionStream(std::vector<instruction_t> instructions)
         : instructions_{std::move(instructions)} {}
+
+    void reserve(size_type new_capacity) {
+        instructions_.reserve(new_capacity);
+    }
+
+    size_type capacity() const noexcept { return instructions_.capacity(); }
 
     instruction_t &at(size_type pos) { return instructions_.at(pos); }
 
@@ -99,14 +109,15 @@ class InstructionStream {
 
     const_iterator cend() const { return instructions_.cend(); }
 
+    void push_back(const instruction_t &instruction) {
+        instructions_.push_back(instruction);
+    }
+
     static InstructionStream parse(std::filesystem::path trace_file);
 
     static instruction_t parse_instruction(const char *begin, char **end);
 
   private:
-    InstructionStream(const InstructionStream &);
-
-    InstructionStream &operator=(const InstructionStream &);
 
     std::vector<instruction_t> instructions_;
 };

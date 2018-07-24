@@ -27,7 +27,6 @@ class Instruction {
     static const opcode_t OPCODE_ENVIRONMENT_VARIABLE_REMOVE;
     static const opcode_t OPCODE_ENVIRONMENT_VARIABLE_DEFINE;
     static const opcode_t OPCODE_ENVIRONMENT_VARIABLE_LOOKUP;
-    static const std::size_t MINIMUM_INSTRUCTION_LENGTH;
 
   public:
     explicit Instruction()

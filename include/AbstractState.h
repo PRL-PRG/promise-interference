@@ -56,7 +56,7 @@ class AbstractState {
     void associate_lookup(const Variable variable,
                           const AbstractValue abstract_value) {
         scope_t scope{get_current_scope()};
-        // if (std::holds_alternative<FunctionScope>(scope)) {
+
         auto result = lookups_.insert({scope, {{variable, {abstract_value}}}});
         if (result.second) {
             return;

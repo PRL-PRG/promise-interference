@@ -16,6 +16,7 @@ using variable_name_t = std::string;
 using sexp_type_t = std::string;
 using variable_id_t = int;
 using expression_t = std::string;
+using line_number_t = std::size_t;
 
 std::pair<void *, std::size_t> mmap_file(const std::string &filepath);
 
@@ -69,4 +70,16 @@ inline bool starts_with(const char *begin, const std::string &prefix) {
     return std::strncmp(begin, prefix.c_str(), prefix.length()) == 0;
 }
 
+inline std::size_t count_instructions(const char *begin, const char *end) {
+    std::size_t line_count = 0;
+    if (begin == end)
+        return line_count;
+    ++begin;
+    while (begin != end) {
+        if (*(begin - 1) == RECORD_SEPARATOR && *begin == '\n')
+            ++line_count;
+        ++begin;
+    }
+    return line_count;
+}
 #endif /* PROMISE_INTERFERENCE_UTILITIES_H */

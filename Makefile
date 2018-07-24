@@ -10,8 +10,8 @@ SOURCE_DIR := ./src
 BUILD_DIR := ./build
 INCLUDE_DIR := ./include
 
-CPPFLAGS := -std=c++17 -I$(INCLUDE_DIR) -MMD -MP
-LDFLAGS := -g -lstdc++ -lstdc++fs
+CPPFLAGS := -g -std=c++17 -I$(INCLUDE_DIR) -MMD -MP
+LDFLAGS := -lstdc++ -lstdc++fs
 
 SOURCES := $(shell find $(SOURCE_DIR) -name *.cpp)
 OBJECTS := $(patsubst $(SOURCE_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SOURCES))
@@ -25,6 +25,7 @@ $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.cpp
 
 $(BUILD_DIR):
 	$(MKDIR_P) $(BUILD_DIR)
+	$(MKDIR_P) $(BUILD_DIR)/analysis
 
 clean:
 	$(RM) $(BUILD_DIR)
