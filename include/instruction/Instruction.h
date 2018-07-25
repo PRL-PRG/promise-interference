@@ -35,11 +35,11 @@ class Instruction {
 
     virtual void interpret(state::AbstractState &state) const = 0;
 
-    void set_line_number(std::size_t line_number) {
+    void set_line_number(line_number_t line_number) {
         line_number_ = line_number;
     }
 
-    std::size_t get_line_number() const { return line_number_; }
+    line_number_t get_line_number() const { return line_number_; }
 
     virtual ~Instruction() {}
 
@@ -67,7 +67,7 @@ class Instruction {
     }
 
   private:
-    std::size_t line_number_;
+    line_number_t line_number_;
 };
 }
 

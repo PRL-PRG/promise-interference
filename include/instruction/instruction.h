@@ -35,12 +35,12 @@ inline std::string to_string(const instruction_t &instruction) {
 }
 
 inline void set_line_number(instruction_t &instruction,
-                            std::size_t line_number) {
+                            line_number_t line_number) {
     std::visit([&](auto &i) { i.set_line_number(line_number); }, instruction);
 }
 
-inline std::size_t get_line_number(const instruction_t &instruction) {
-    std::size_t line_number;
+inline line_number_t get_line_number(const instruction_t &instruction) {
+    line_number_t line_number;
     std::visit([&](const auto &i) { line_number = i.get_line_number(); },
                instruction);
     return line_number;

@@ -90,7 +90,7 @@ Stream Stream::parse(std::filesystem::path instruction_filepath) {
     std::vector<instruction_t> instructions;
     std::size_t instruction_count{count_instructions(current, end)};
     instructions.reserve(instruction_count);
-    std::size_t line_number = 0;
+    line_number_t line_number = 0;
 
     while (current != end) {
         instruction_t instruction{parse_instruction(current, &next)};
