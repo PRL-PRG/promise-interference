@@ -14,6 +14,8 @@ class PromiseValue : public Instruction {
 
     const sexp_type_t &get_value_type() const { return value_type_; }
 
+    virtual ~PromiseValue() {}
+
   private:
     promise_id_t id_;
     sexp_type_t value_type_;

@@ -17,6 +17,8 @@ class PromiseEnvironment : public Instruction {
         return environment_id_;
     }
 
+    virtual ~PromiseEnvironment() {}
+
   private:
     promise_id_t id_;
     environment_id_t environment_id_;

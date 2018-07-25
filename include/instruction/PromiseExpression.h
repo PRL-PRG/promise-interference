@@ -15,6 +15,8 @@ class PromiseExpression : public Instruction {
 
     const expression_t &get_expression() const { return expression_; }
 
+    virtual ~PromiseExpression() {}
+
   private:
     promise_id_t id_;
     expression_t expression_;
