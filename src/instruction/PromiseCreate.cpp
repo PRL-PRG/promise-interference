@@ -13,6 +13,8 @@ PromiseCreate PromiseCreate::parse_arguments(const char *begin, char **end) {
 
     expression_t expression{parse_expression(*end + 1, end)};
 
+    parse_record_separator(begin, end);
+
     return PromiseCreate{id, environment_id, expression};
 }
 }

@@ -12,6 +12,8 @@ PromiseExit PromiseExit::parse_arguments(const char *begin, char **end) {
 
     bool jump{parse_boolean(*end + 1, end)};
 
+    parse_record_separator(begin, end);
+
     return PromiseExit{id, jump};
 }
 }

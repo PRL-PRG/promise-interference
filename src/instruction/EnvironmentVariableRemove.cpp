@@ -15,6 +15,8 @@ EnvironmentVariableRemove::parse_arguments(const char *begin, char **end) {
 
     variable_name_t variable_name{parse_variable_name(*end + 1, end)};
 
+    parse_record_separator(begin, end);
+
     return EnvironmentVariableRemove{
         environment_id, state::Variable{variable_id, variable_name}};
 }

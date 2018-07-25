@@ -11,6 +11,8 @@ EnvironmentCreate EnvironmentCreate::parse_arguments(const char *begin,
 
     environment_id_t id{parse_environment_id(begin, end)};
 
+    parse_record_separator(begin, end);
+
     return EnvironmentCreate{id};
 }
 }

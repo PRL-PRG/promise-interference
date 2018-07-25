@@ -74,6 +74,10 @@ inline bool parse_boolean(const char *begin, char **end) {
     return std::strtol(begin, end, 10);
 }
 
+inline void parse_record_separator(const char *begin, char **end) {
+    *end = *end + 1;
+}
+
 inline std::size_t count_instructions(const char *begin, const char *end) {
     std::size_t line_count = 0;
     if (begin == end)

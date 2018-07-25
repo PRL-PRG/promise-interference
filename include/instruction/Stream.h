@@ -70,7 +70,6 @@ class Stream {
 };
 }
 
-std::ostream &operator<<(std::ostream &os,
-                         const instruction::Stream &instruction_stream);
+std::ostream &operator<<(std::ostream &os, const instruction::Stream &stream);
 
 #endif /* PROMISE_INTERFERENCE_INSTRUCTION_STREAM_H */

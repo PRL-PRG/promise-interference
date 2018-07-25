@@ -97,7 +97,7 @@ Stream Stream::parse(std::filesystem::path instruction_filepath) {
         set_line_number(instruction, line_number);
         instructions.push_back(instruction);
         ++line_number;
-        current = next + 2;
+        current = next + 1;
     }
 
     munmap_file(data, size);

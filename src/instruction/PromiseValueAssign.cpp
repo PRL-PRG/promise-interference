@@ -12,6 +12,8 @@ PromiseValueAssign PromiseValueAssign::parse_arguments(const char *begin,
 
     sexp_type_t value_type{parse_sexp_type(*end + 1, end)};
 
+    parse_record_separator(begin, end);
+
     return PromiseValueAssign{id, value_type};
 }
 }

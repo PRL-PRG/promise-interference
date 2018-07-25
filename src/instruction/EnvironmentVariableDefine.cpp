@@ -17,6 +17,8 @@ EnvironmentVariableDefine::parse_arguments(const char *begin, char **end) {
 
     sexp_type_t value_type{parse_sexp_type(*end + 1, end)};
 
+    parse_record_separator(begin, end);
+
     return EnvironmentVariableDefine{
         environment_id, state::Variable{variable_id, variable_name},
         value_type};

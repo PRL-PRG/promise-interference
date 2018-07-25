@@ -12,6 +12,8 @@ PromiseEnvironmentAssign::parse_arguments(const char *begin, char **end) {
 
     environment_id_t environment_id{parse_environment_id(*end + 1, end)};
 
+    parse_record_separator(begin, end);
+
     return PromiseEnvironmentAssign{id, environment_id};
 }
 }
