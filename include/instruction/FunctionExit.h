@@ -9,27 +9,17 @@ namespace instruction {
 
 class FunctionExit : public Instruction {
   public:
-    explicit FunctionExit(const sexp_type_t &type, const function_id_t id,
-                          const call_id_t call_id,
-                          const environment_id_t environment_id)
-        : Instruction{}, type_{type}, id_{id}, call_id_{call_id},
-          environment_id_{environment_id} {}
-
-    const sexp_type_t &get_type() const { return type_; }
-
-    const function_id_t get_id() const { return id_; }
+    explicit FunctionExit(const call_id_t call_id, const bool jump)
+        : Instruction{}, call_id_{call_id}, jump_{jump} {}
 
     const call_id_t get_call_id() const { return call_id_; }
 
-    const environment_id_t get_environment_id() const {
-        return environment_id_;
-    }
+    bool is_jump() const { return jump_; }
 
     std::string to_string() const override {
         std::stringstream stream;
-        stream << get_opcode() << UNIT_SEPARATOR << get_type() << UNIT_SEPARATOR
-               << get_id() << UNIT_SEPARATOR << get_call_id() << UNIT_SEPARATOR
-               << get_environment_id() << RECORD_SEPARATOR;
+        stream << get_opcode() << UNIT_SEPARATOR << get_call_id()
+               << UNIT_SEPARATOR << is_jump() << RECORD_SEPARATOR;
         return stream.str();
     }
 
@@ -57,6 +47,7 @@ class FunctionExit : public Instruction {
     function_id_t id_;
     call_id_t call_id_;
     environment_id_t environment_id_;
+    bool jump_;
 };
 }
 

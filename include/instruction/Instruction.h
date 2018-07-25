@@ -10,10 +10,8 @@ namespace instruction {
 
 class Instruction {
   public:
-    static const opcode_t OPCODE_NULL;
     static const opcode_t OPCODE_FUNCTION_ENTRY;
     static const opcode_t OPCODE_FUNCTION_EXIT;
-    static const opcode_t OPCODE_FUNCTION_CONTEXT_JUMP;
     static const opcode_t OPCODE_PROMISE_CREATE;
     static const opcode_t OPCODE_PROMISE_ENTRY;
     static const opcode_t OPCODE_PROMISE_EXIT;
@@ -23,7 +21,6 @@ class Instruction {
     static const opcode_t OPCODE_PROMISE_VALUE_ASSIGN;
     static const opcode_t OPCODE_PROMISE_EXPRESSION_ASSIGN;
     static const opcode_t OPCODE_PROMISE_ENVIRONMENT_ASSIGN;
-    static const opcode_t OPCODE_PROMISE_CONTEXT_JUMP;
     static const opcode_t OPCODE_ENVIRONMENT_CREATE;
     static const opcode_t OPCODE_ENVIRONMENT_VARIABLE_ASSIGN;
     static const opcode_t OPCODE_ENVIRONMENT_VARIABLE_REMOVE;

@@ -70,6 +70,10 @@ inline bool starts_with(const char *begin, const std::string &prefix) {
     return std::strncmp(begin, prefix.c_str(), prefix.length()) == 0;
 }
 
+inline bool parse_boolean(const char *begin, char **end) {
+    return std::strtol(begin, end, 10);
+}
+
 inline std::size_t count_instructions(const char *begin, const char *end) {
     std::size_t line_count = 0;
     if (begin == end)

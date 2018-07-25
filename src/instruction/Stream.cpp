@@ -13,10 +13,6 @@ instruction_t Stream::parse_instruction(const char *begin, char **end) {
         return Instruction::parse_arguments<FunctionExit>(*end + 1, end);
     }
 
-    if (Instruction::starts_with_opcode<FunctionContextJump>(begin, end)) {
-        return Instruction::parse_arguments<FunctionContextJump>(*end + 1, end);
-    }
-
     if (Instruction::starts_with_opcode<EnvironmentVariableDefine>(begin,
                                                                    end)) {
         return Instruction::parse_arguments<EnvironmentVariableDefine>(*end + 1,
@@ -57,10 +53,6 @@ instruction_t Stream::parse_instruction(const char *begin, char **end) {
         return Instruction::parse_arguments<PromiseExit>(*end + 1, end);
     }
 
-    if (Instruction::starts_with_opcode<PromiseContextJump>(begin, end)) {
-        return Instruction::parse_arguments<PromiseContextJump>(*end + 1, end);
-    }
-
     if (Instruction::starts_with_opcode<PromiseValueLookup>(begin, end)) {
         return Instruction::parse_arguments<PromiseValueLookup>(*end + 1, end);
     }
@@ -88,8 +80,6 @@ instruction_t Stream::parse_instruction(const char *begin, char **end) {
         return Instruction::parse_arguments<PromiseEnvironmentAssign>(*end + 1,
                                                                       end);
     }
-
-    return Null{};
 }
 
 Stream Stream::parse(std::filesystem::path instruction_filepath) {
@@ -97,14 +87,13 @@ Stream Stream::parse(std::filesystem::path instruction_filepath) {
     char *current = static_cast<char *>(data);
     char *end = current + size;
     char *next;
-    instruction_t instruction;
     std::vector<instruction_t> instructions;
     std::size_t instruction_count{count_instructions(current, end)};
     instructions.reserve(instruction_count);
     std::size_t line_number = 0;
 
     while (current != end) {
-        instruction = parse_instruction(current, &next);
+        instruction_t instruction{parse_instruction(current, &next)};
         set_line_number(instruction, line_number);
         instructions.push_back(instruction);
         ++line_number;

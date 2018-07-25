@@ -79,13 +79,6 @@ void exit_promise(const instruction::PromiseExit &prf,
     stack.pop_back();
 }
 
-void exit_promise(const instruction::PromiseContextJump &prj,
-                  promise_strictness_map_t &map,
-                  promise_strictness_stack_t &stack) {
-    stack.back()->exit = prj.get_line_number();
-    stack.pop_back();
-}
-
 promise_strictness_map_t analyze(const instruction::Stream &stream) {
     promise_strictness_map_t map;
     promise_strictness_stack_t stack;
@@ -107,10 +100,6 @@ promise_strictness_map_t analyze(const instruction::Stream &stream) {
                        instruction)) {
             exit_promise(std::get<instruction::PromiseExit>(instruction), map,
                          stack);
-        } else if (std::holds_alternative<instruction::PromiseContextJump>(
-                       instruction)) {
-            exit_promise(std::get<instruction::PromiseContextJump>(instruction),
-                         map, stack);
         }
     }
 
@@ -148,20 +137,10 @@ instruction::Stream rewrite(const instruction::Stream &lazy_stream) {
             }
 
         } else if (std::holds_alternative<instruction::PromiseExit>(
-                       instruction) ||
-                   std::holds_alternative<instruction::PromiseContextJump>(
                        instruction)) {
-            auto promise_id = 0;
 
-            if (std::holds_alternative<instruction::PromiseExit>(instruction))
-                promise_id =
-                    std::get<instruction::PromiseExit>(instruction).get_id();
-
-            else if (std::holds_alternative<instruction::PromiseContextJump>(
-                         instruction))
-                promise_id =
-                    std::get<instruction::PromiseContextJump>(instruction)
-                        .get_id();
+            auto promise_id{
+                std::get<instruction::PromiseExit>(instruction).get_id()};
 
             bool strict = promise_strictness_map[promise_id].strict;
 

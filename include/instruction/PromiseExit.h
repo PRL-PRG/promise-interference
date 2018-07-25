@@ -10,14 +10,17 @@ namespace instruction {
 
 class PromiseExit : public Instruction {
   public:
-    explicit PromiseExit(const promise_id_t id) : Instruction{}, id_{id} {}
+    explicit PromiseExit(const promise_id_t id, bool jump)
+        : Instruction{}, id_{id}, jump_{jump} {}
 
     const promise_id_t get_id() const { return id_; }
 
+    bool is_jump() const { return jump_; }
+
     std::string to_string() const override {
         std::stringstream stream;
-        stream << get_opcode() << UNIT_SEPARATOR << get_id()
-               << RECORD_SEPARATOR;
+        stream << get_opcode() << UNIT_SEPARATOR << get_id() << UNIT_SEPARATOR
+               << is_jump() << RECORD_SEPARATOR;
         return stream.str();
     }
 
@@ -39,6 +42,7 @@ class PromiseExit : public Instruction {
 
   private:
     promise_id_t id_;
+    bool jump_;
 };
 }
 

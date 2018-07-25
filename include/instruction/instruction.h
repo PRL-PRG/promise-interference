@@ -6,11 +6,8 @@
 #include "EnvironmentVariableDefine.h"
 #include "EnvironmentVariableLookup.h"
 #include "EnvironmentVariableRemove.h"
-#include "FunctionContextJump.h"
 #include "FunctionEntry.h"
 #include "FunctionExit.h"
-#include "Null.h"
-#include "PromiseContextJump.h"
 #include "PromiseCreate.h"
 #include "PromiseEntry.h"
 #include "PromiseEnvironmentAssign.h"
@@ -23,14 +20,12 @@
 
 namespace instruction {
 
-using instruction_t =
-    std::variant<Null, FunctionEntry, FunctionExit, FunctionContextJump,
-                 PromiseCreate, PromiseEntry, PromiseExit, PromiseValueLookup,
-                 PromiseValueAssign, PromiseEnvironmentLookup,
-                 PromiseEnvironmentAssign, PromiseExpressionLookup,
-                 PromiseExpressionAssign, PromiseContextJump, EnvironmentCreate,
-                 EnvironmentVariableAssign, EnvironmentVariableRemove,
-                 EnvironmentVariableDefine, EnvironmentVariableLookup>;
+using instruction_t = std::variant<
+    FunctionEntry, FunctionExit, PromiseCreate, PromiseEntry, PromiseExit,
+    PromiseValueLookup, PromiseValueAssign, PromiseEnvironmentLookup,
+    PromiseEnvironmentAssign, PromiseExpressionLookup, PromiseExpressionAssign,
+    EnvironmentCreate, EnvironmentVariableAssign, EnvironmentVariableRemove,
+    EnvironmentVariableDefine, EnvironmentVariableLookup>;
 
 inline std::string to_string(const instruction_t &instruction) {
     std::string instruction_string;
