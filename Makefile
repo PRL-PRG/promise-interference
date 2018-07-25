@@ -26,6 +26,10 @@ $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.cpp
 $(BUILD_DIR):
 	$(MKDIR_P) $(BUILD_DIR)
 	$(MKDIR_P) $(BUILD_DIR)/analysis
+	$(MKDIR_P) $(BUILD_DIR)/instruction
+	$(MKDIR_P) $(BUILD_DIR)/state
+	$(MKDIR_P) $(BUILD_DIR)/scope
+	$(MKDIR_P) $(BUILD_DIR)/interpreter
 
 clean:
 	$(RM) $(BUILD_DIR)

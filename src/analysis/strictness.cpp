@@ -1,4 +1,6 @@
-#include "InstructionStream.h"
+#include "analysis/strictness.h"
+#include "instruction/Stream.h"
+#include "instruction/instruction.h"
 #include "utilities.h"
 
 namespace analysis::strictness {
@@ -16,7 +18,7 @@ using promise_strictness_map_t =
 
 using promise_strictness_stack_t = std::vector<promise_strictness_t *>;
 
-bool create_promise(const PromiseCreateInstruction &prc,
+bool create_promise(const instruction::PromiseCreate &prc,
                     promise_strictness_map_t &map,
                     promise_strictness_stack_t &stack) {
     // assume that the promise is not strict because the entry point is not
@@ -29,7 +31,7 @@ bool create_promise(const PromiseCreateInstruction &prc,
         .second;
 }
 
-void enter_promise(const PromiseEntryInstruction &prb,
+void enter_promise(const instruction::PromiseEntry &prb,
                    promise_strictness_map_t &map,
                    promise_strictness_stack_t &stack) {
 
@@ -70,43 +72,44 @@ void enter_promise(const PromiseEntryInstruction &prb,
     }
 }
 
-void exit_promise(const PromiseExitInstruction &prf,
+void exit_promise(const instruction::PromiseExit &prf,
                   promise_strictness_map_t &map,
                   promise_strictness_stack_t &stack) {
     stack.back()->exit = prf.get_line_number();
     stack.pop_back();
 }
 
-void exit_promise(const PromiseContextJumpInstruction &prj,
+void exit_promise(const instruction::PromiseContextJump &prj,
                   promise_strictness_map_t &map,
                   promise_strictness_stack_t &stack) {
     stack.back()->exit = prj.get_line_number();
     stack.pop_back();
 }
 
-promise_strictness_map_t analyze(const InstructionStream &stream) {
+promise_strictness_map_t analyze(const instruction::Stream &stream) {
     promise_strictness_map_t map;
     promise_strictness_stack_t stack;
 
     for (const auto &instruction : stream) {
 
-        if (std::holds_alternative<PromiseCreateInstruction>(instruction)) {
-            if (!create_promise(std::get<PromiseCreateInstruction>(instruction),
-                                map, stack)) {
+        if (std::holds_alternative<instruction::PromiseCreate>(instruction)) {
+            if (!create_promise(
+                    std::get<instruction::PromiseCreate>(instruction), map,
+                    stack)) {
                 std::cerr << "Error inserting promise: " << instruction;
                 exit(EXIT_FAILURE);
             }
-        } else if (std::holds_alternative<PromiseEntryInstruction>(
+        } else if (std::holds_alternative<instruction::PromiseEntry>(
                        instruction)) {
-            enter_promise(std::get<PromiseEntryInstruction>(instruction), map,
+            enter_promise(std::get<instruction::PromiseEntry>(instruction), map,
                           stack);
-        } else if (std::holds_alternative<PromiseExitInstruction>(
+        } else if (std::holds_alternative<instruction::PromiseExit>(
                        instruction)) {
-            exit_promise(std::get<PromiseExitInstruction>(instruction), map,
+            exit_promise(std::get<instruction::PromiseExit>(instruction), map,
                          stack);
-        } else if (std::holds_alternative<PromiseContextJumpInstruction>(
+        } else if (std::holds_alternative<instruction::PromiseContextJump>(
                        instruction)) {
-            exit_promise(std::get<PromiseContextJumpInstruction>(instruction),
+            exit_promise(std::get<instruction::PromiseContextJump>(instruction),
                          map, stack);
         }
     }
@@ -114,10 +117,10 @@ promise_strictness_map_t analyze(const InstructionStream &stream) {
     return map;
 }
 
-InstructionStream rewrite(const InstructionStream &lazy_stream) {
+instruction::Stream rewrite(const instruction::Stream &lazy_stream) {
     auto promise_strictness_map{analyze(lazy_stream)};
-    InstructionStream strict_stream{lazy_stream.size()};
-    InstructionStream::size_type lazy_index = 0;
+    instruction::Stream strict_stream{lazy_stream.size()};
+    instruction::Stream::size_type lazy_index = 0;
     std::vector<promise_strictness_t> stack;
     std::vector<bool> copied{std::vector(lazy_stream.size(), false)};
 
@@ -129,13 +132,13 @@ InstructionStream rewrite(const InstructionStream &lazy_stream) {
                 break;
         }
 
-        const instruction_t &instruction{lazy_stream[lazy_index]};
+        const instruction::instruction_t &instruction{lazy_stream[lazy_index]};
         strict_stream.push_back(instruction);
         copied[lazy_index] = true;
 
-        if (std::holds_alternative<PromiseCreateInstruction>(instruction)) {
+        if (std::holds_alternative<instruction::PromiseCreate>(instruction)) {
 
-            const auto &prc{std::get<PromiseCreateInstruction>(instruction)};
+            const auto &prc{std::get<instruction::PromiseCreate>(instruction)};
             auto promise_strictness{promise_strictness_map[prc.get_id()]};
             if (promise_strictness.strict) {
                 stack.push_back(promise_strictness);
@@ -144,20 +147,20 @@ InstructionStream rewrite(const InstructionStream &lazy_stream) {
                 lazy_index = lazy_index + 1;
             }
 
-        } else if (std::holds_alternative<PromiseExitInstruction>(
+        } else if (std::holds_alternative<instruction::PromiseExit>(
                        instruction) ||
-                   std::holds_alternative<PromiseContextJumpInstruction>(
+                   std::holds_alternative<instruction::PromiseContextJump>(
                        instruction)) {
             auto promise_id = 0;
 
-            if (std::holds_alternative<PromiseExitInstruction>(instruction))
+            if (std::holds_alternative<instruction::PromiseExit>(instruction))
                 promise_id =
-                    std::get<PromiseExitInstruction>(instruction).get_id();
+                    std::get<instruction::PromiseExit>(instruction).get_id();
 
-            else if (std::holds_alternative<PromiseContextJumpInstruction>(
+            else if (std::holds_alternative<instruction::PromiseContextJump>(
                          instruction))
                 promise_id =
-                    std::get<PromiseContextJumpInstruction>(instruction)
+                    std::get<instruction::PromiseContextJump>(instruction)
                         .get_id();
 
             bool strict = promise_strictness_map[promise_id].strict;

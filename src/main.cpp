@@ -1,7 +1,8 @@
-#include "AbstractInterpreter.h"
-#include "AbstractState.h"
-#include "InstructionStream.h"
-#include "analysis.h"
+#include "analysis/strictness.h"
+#include "instruction/Stream.h"
+#include "instruction/instruction.h"
+#include "interpreter/interpreter.h"
+#include "state/AbstractState.h"
 #include <chrono>
 #include <cstdlib>
 #include <fstream>
@@ -30,7 +31,7 @@ int main(int argc, char *argv[]) {
     high_resolution_clock::time_point t1, t2;
 
     t1 = high_resolution_clock::now();
-    auto lazy_stream{InstructionStream::parse(lazy_trace_filepath)};
+    auto lazy_stream{instruction::Stream::parse(lazy_trace_filepath)};
     t2 = high_resolution_clock::now();
 
     std::cout << lazy_stream.size() << " "
@@ -38,7 +39,7 @@ int main(int argc, char *argv[]) {
               << std::flush;
 
     t1 = high_resolution_clock::now();
-    auto abstract_state{AbstractInterpreter::interpret(lazy_stream)};
+    auto abstract_state{interpreter::interpret(lazy_stream)};
     t2 = high_resolution_clock::now();
 
     std::cout << duration_cast<duration<double>>(t2 - t1).count() << " "
@@ -53,7 +54,7 @@ int main(int argc, char *argv[]) {
               << std::flush;
 
     t1 = high_resolution_clock::now();
-    auto strict_state{AbstractInterpreter::interpret(strict_stream)};
+    auto strict_state{interpreter::interpret(strict_stream)};
     t2 = high_resolution_clock::now();
 
     std::cout << duration_cast<duration<double>>(t2 - t1).count() << " "
