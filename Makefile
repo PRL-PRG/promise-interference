@@ -1,5 +1,5 @@
-CC := gcc
-CXX := g++
+CC := gcc-8
+CXX := g++-8
 RM := rm -rf
 MKDIR_P := mkdir -p
 CLANG_TIDY := clang-tidy
