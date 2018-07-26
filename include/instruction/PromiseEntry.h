@@ -35,4 +35,9 @@ class PromiseEntry : public Instruction {
 };
 }
 
+inline std::ostream &operator<<(std::ostream &os,
+                                const instruction::PromiseEntry &instruction) {
+    return os << instruction.to_string();
+}
+
 #endif /* PROMISE_INTERFERENCE_PROMISE_ENTRY_INSTRUCTION_H */

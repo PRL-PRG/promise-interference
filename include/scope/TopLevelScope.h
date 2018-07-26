@@ -20,8 +20,10 @@ class TopLevelScope {
 };
 }
 
-std::ostream &operator<<(std::ostream &os,
-                         const scope::TopLevelScope &promise_scope);
+inline std::ostream &operator<<(std::ostream &os,
+                                const scope::TopLevelScope &top_level_scope) {
+    return os << top_level_scope.to_string();
+}
 
 namespace std {
 

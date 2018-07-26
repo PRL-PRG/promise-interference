@@ -32,7 +32,7 @@ class Variable {
 
     bool operator!=(const Variable &rhs) const { return !(operator==(rhs)); }
 
-    const std::string to_string() const {
+    std::string to_string() const {
         std::stringstream stream;
         stream << "Variable(" << get_id() << ", " << get_name() << ")";
         return stream.str();
@@ -44,7 +44,10 @@ class Variable {
 };
 }
 
-std::ostream &operator<<(std::ostream &os, const state::Variable &variable);
+inline std::ostream &operator<<(std::ostream &os,
+                                const state::Variable &variable) {
+    return os << variable.to_string();
+}
 
 namespace std {
 

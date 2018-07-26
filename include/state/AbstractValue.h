@@ -35,7 +35,9 @@ class AbstractValue {
 };
 }
 
-std::ostream &operator<<(std::ostream &os,
-                         const state::AbstractValue &abstract_value);
+inline std::ostream &operator<<(std::ostream &os,
+                                const state::AbstractValue &abstract_value) {
+    return os << abstract_value.to_string();
+}
 
 #endif /* PROMISE_INTERFERENCE_ABSTRACT_VALUE_H */

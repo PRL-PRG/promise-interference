@@ -28,4 +28,10 @@ class PromiseEnvironmentLookup : public PromiseEnvironment {
 };
 }
 
+inline std::ostream &
+operator<<(std::ostream &os,
+           const instruction::PromiseEnvironmentLookup &instruction) {
+    return os << instruction.to_string();
+}
+
 #endif /* PROMISE_INTERFERENCE_PROMISE_ENVIRONMENT_LOOKUP_INSTRUCTION_H */

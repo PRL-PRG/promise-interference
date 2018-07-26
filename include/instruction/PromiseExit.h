@@ -46,4 +46,9 @@ class PromiseExit : public Instruction {
 };
 }
 
+inline std::ostream &operator<<(std::ostream &os,
+                                const instruction::PromiseExit &instruction) {
+    return os << instruction.to_string();
+}
+
 #endif /* PROMISE_INTERFERENCE_PROMISE_EXIT_INSTRUCTION_H */

@@ -43,4 +43,9 @@ class PromiseCreate : public Instruction {
 };
 }
 
+inline std::ostream &operator<<(std::ostream &os,
+                                const instruction::PromiseCreate &instruction) {
+    return os << instruction.to_string();
+}
+
 #endif /* PROMISE_INTERFERENCE_PROMISE_CREATE_INSTRUCTION_H */

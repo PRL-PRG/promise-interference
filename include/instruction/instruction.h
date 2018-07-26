@@ -34,6 +34,12 @@ inline std::string to_string(const instruction_t &instruction) {
     return instruction_string;
 }
 
+inline std::ostream &operator<<(std::ostream &os,
+                                const instruction::instruction_t &instruction) {
+    std::visit([&](const auto &i) { os << i.to_string(); }, instruction);
+    return os;
+}
+
 inline void set_line_number(instruction_t &instruction,
                             line_number_t line_number) {
     std::visit([&](auto &i) { i.set_line_number(line_number); }, instruction);
@@ -45,12 +51,6 @@ inline line_number_t get_line_number(const instruction_t &instruction) {
                instruction);
     return line_number;
 }
-}
-
-inline std::ostream &operator<<(std::ostream &os,
-                                const instruction::instruction_t &instruction) {
-    std::visit([&](auto const &i) { os << i.to_string(); }, instruction);
-    return os;
 }
 
 #endif /* PROMISE_INTERFERENCE_INSTRUCTION_INSTRUCTION_H */

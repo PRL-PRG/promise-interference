@@ -27,4 +27,10 @@ class PromiseValueAssign : public PromiseValue {
 };
 }
 
+inline std::ostream &
+operator<<(std::ostream &os,
+           const instruction::PromiseValueAssign &instruction) {
+    return os << instruction.to_string();
+}
+
 #endif /* PROMISE_INTERFERENCE_PROMISE_VALUE_ASSIGN_INSTRUCTION_H */

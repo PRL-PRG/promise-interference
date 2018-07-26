@@ -105,10 +105,3 @@ Stream Stream::parse(std::filesystem::path instruction_filepath) {
     return Stream{std::move(instructions)};
 }
 }
-
-std::ostream &operator<<(std::ostream &os, const instruction::Stream &stream) {
-    for (const auto &instruction : stream) {
-        os << instruction << std::endl;
-    }
-    return os;
-}

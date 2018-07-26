@@ -40,4 +40,10 @@ class EnvironmentVariableDefine : public EnvironmentVariableAction {
 };
 }
 
+inline std::ostream &
+operator<<(std::ostream &os,
+           const instruction::EnvironmentVariableDefine &instruction) {
+    return os << instruction.to_string();
+}
+
 #endif /* PROMISE_INTERFERENCE_ENVIRONMENT_VARIABLE_DEFINE_INSTRUCTION_H */

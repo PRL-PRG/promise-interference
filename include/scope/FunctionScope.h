@@ -49,8 +49,10 @@ class FunctionScope {
 };
 }
 
-std::ostream &operator<<(std::ostream &os,
-                         const scope::FunctionScope &function_scope);
+inline std::ostream &operator<<(std::ostream &os,
+                                const scope::FunctionScope &function_scope) {
+    return os << function_scope.to_string();
+}
 
 namespace std {
 

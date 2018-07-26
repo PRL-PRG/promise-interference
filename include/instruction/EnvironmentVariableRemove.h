@@ -31,4 +31,10 @@ class EnvironmentVariableRemove : public EnvironmentVariableAction {
 };
 }
 
+inline std::ostream &
+operator<<(std::ostream &os,
+           const instruction::EnvironmentVariableRemove &instruction) {
+    return os << instruction.to_string();
+}
+
 #endif /* PROMISE_INTERFERENCE_ENVIRONMENT_VARIABLE_REMOVE_INSTRUCTION_H */

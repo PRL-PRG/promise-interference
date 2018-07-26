@@ -10,9 +10,16 @@ namespace scope {
 
 using scope_t = std::variant<TopLevelScope, FunctionScope, PromiseScope>;
 
-std::string to_string(const scope_t &scope);
+inline std::string to_string(const scope_t &scope) {
+    std::string scope_string;
+    std::visit([&](const auto &s) { scope_string = s.to_string(); }, scope);
+    return scope_string;
+}
 }
 
-std::ostream &operator<<(std::ostream &os, const scope::scope_t &scope);
+inline std::ostream &operator<<(std::ostream &os, const scope::scope_t &scope) {
+    std::visit([&](auto const &s) { os << s; }, scope);
+    return os;
+}
 
 #endif /* PROMISE_INTERFERENCE_SCOPE_H */

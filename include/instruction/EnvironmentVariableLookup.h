@@ -62,4 +62,10 @@ class EnvironmentVariableLookup : public EnvironmentVariableAction {
 };
 }
 
+inline std::ostream &
+operator<<(std::ostream &os,
+           const instruction::EnvironmentVariableLookup &instruction) {
+    return os << instruction.to_string();
+}
+
 #endif /* PROMISE_INTERFERENCE_ENVIRONMENT_VARIABLE_LOOKUP_INSTRUCTION_H */

@@ -31,8 +31,10 @@ class PromiseScope {
 };
 }
 
-std::ostream &operator<<(std::ostream &os,
-                         const scope::PromiseScope &promise_scope);
+inline std::ostream &operator<<(std::ostream &os,
+                                const scope::PromiseScope &promise_scope) {
+    return os << promise_scope.to_string();
+}
 
 namespace std {
 

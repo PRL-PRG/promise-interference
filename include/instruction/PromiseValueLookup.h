@@ -27,4 +27,10 @@ class PromiseValueLookup : public PromiseValue {
 };
 }
 
+inline std::ostream &
+operator<<(std::ostream &os,
+           const instruction::PromiseValueLookup &instruction) {
+    return os << instruction.to_string();
+}
+
 #endif /* PROMISE_INTERFERENCE_PROMISE_VALUE_LOOKUP_INSTRUCTION_H */

@@ -28,4 +28,10 @@ class PromiseExpressionLookup : public PromiseExpression {
 };
 }
 
+inline std::ostream &
+operator<<(std::ostream &os,
+           const instruction::PromiseExpressionLookup &instruction) {
+    return os << instruction.to_string();
+}
+
 #endif /* PROMISE_INTERFERENCE_PROMISE_EXPRESSION_LOOKUP_INSTRUCTION_H */

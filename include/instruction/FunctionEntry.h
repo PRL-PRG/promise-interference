@@ -50,4 +50,9 @@ class FunctionEntry : public Instruction {
 };
 }
 
+inline std::ostream &operator<<(std::ostream &os,
+                                const instruction::FunctionEntry &instruction) {
+    return os << instruction.to_string();
+}
+
 #endif /* PROMISE_INTERFERENCE_FUNCTION_ENTRY_INSTRUCTION_H */

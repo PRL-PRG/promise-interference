@@ -28,4 +28,10 @@ class PromiseExpressionAssign : public PromiseExpression {
 };
 }
 
+inline std::ostream &
+operator<<(std::ostream &os,
+           const instruction::PromiseExpressionAssign &instruction) {
+    return os << instruction.to_string();
+}
+
 #endif /* PROMISE_INTERFERENCE_PROMISE_EXPRESSION_ASSIGN_INSTRUCTION_H */
