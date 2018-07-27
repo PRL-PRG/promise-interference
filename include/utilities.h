@@ -17,6 +17,7 @@ using sexp_type_t = std::string;
 using variable_id_t = int;
 using expression_t = std::string;
 using line_number_t = std::size_t;
+using position_t = std::size_t;
 
 std::pair<void *, std::size_t> mmap_file(const std::string &filepath);
 
@@ -31,7 +32,7 @@ static inline std::string parse_upto_separator(const char *begin, char **end) {
     while (begin[size] != RECORD_SEPARATOR && begin[size] != UNIT_SEPARATOR)
         ++size;
     *end = const_cast<char *>(begin) + size;
-    return std::string{begin, size};
+    return std::string(begin, size);
 }
 
 inline call_id_t parse_call_id(const char *begin, char **end) {
@@ -72,6 +73,10 @@ inline bool starts_with(const char *begin, const std::string &prefix) {
 
 inline bool parse_boolean(const char *begin, char **end) {
     return std::strtol(begin, end, 10);
+}
+
+inline position_t parse_position(const char *begin, char **end) {
+    return std::strtoul(begin, end, 10);
 }
 
 inline void parse_record_separator(const char *begin, char **end) {

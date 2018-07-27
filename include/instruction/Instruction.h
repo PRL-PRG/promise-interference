@@ -12,6 +12,7 @@ class Instruction {
   public:
     static const opcode_t OPCODE_FUNCTION_ENTRY;
     static const opcode_t OPCODE_FUNCTION_EXIT;
+    static const opcode_t OPCODE_ARGUMENT_PROMISE_ASSOCIATE;
     static const opcode_t OPCODE_PROMISE_CREATE;
     static const opcode_t OPCODE_PROMISE_ENTRY;
     static const opcode_t OPCODE_PROMISE_EXIT;

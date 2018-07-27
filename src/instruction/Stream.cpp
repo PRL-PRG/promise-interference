@@ -13,6 +13,11 @@ instruction_t Stream::parse_instruction(const char *begin, char **end) {
         return Instruction::parse_arguments<FunctionExit>(*end + 1, end);
     }
 
+    if (Instruction::starts_with_opcode<ArgumentPromiseAssociate>(begin, end)) {
+        return Instruction::parse_arguments<ArgumentPromiseAssociate>(*end + 1,
+                                                                      end);
+    }
+
     if (Instruction::starts_with_opcode<EnvironmentVariableDefine>(begin,
                                                                    end)) {
         return Instruction::parse_arguments<EnvironmentVariableDefine>(*end + 1,

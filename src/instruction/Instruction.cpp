@@ -4,6 +4,7 @@ namespace instruction {
 
 const opcode_t Instruction::OPCODE_FUNCTION_ENTRY = "fnb";
 const opcode_t Instruction::OPCODE_FUNCTION_EXIT = "fnf";
+const opcode_t Instruction::OPCODE_ARGUMENT_PROMISE_ASSOCIATE = "apa";
 const opcode_t Instruction::OPCODE_PROMISE_CREATE = "prc";
 const opcode_t Instruction::OPCODE_PROMISE_ENTRY = "prb";
 const opcode_t Instruction::OPCODE_PROMISE_EXIT = "prf";

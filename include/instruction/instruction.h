@@ -1,6 +1,7 @@
 #ifndef PROMISE_INTERFERENCE_INSTRUCTION_INSTRUCTION_H
 #define PROMISE_INTERFERENCE_INSTRUCTION_INSTRUCTION_H
 
+#include "ArgumentPromiseAssociate.h"
 #include "EnvironmentCreate.h"
 #include "EnvironmentVariableAssign.h"
 #include "EnvironmentVariableDefine.h"
@@ -20,12 +21,14 @@
 
 namespace instruction {
 
-using instruction_t = std::variant<
-    FunctionEntry, FunctionExit, PromiseCreate, PromiseEntry, PromiseExit,
-    PromiseValueLookup, PromiseValueAssign, PromiseEnvironmentLookup,
-    PromiseEnvironmentAssign, PromiseExpressionLookup, PromiseExpressionAssign,
-    EnvironmentCreate, EnvironmentVariableAssign, EnvironmentVariableRemove,
-    EnvironmentVariableDefine, EnvironmentVariableLookup>;
+using instruction_t =
+    std::variant<FunctionEntry, FunctionExit, PromiseCreate, PromiseEntry,
+                 PromiseExit, ArgumentPromiseAssociate, PromiseValueLookup,
+                 PromiseValueAssign, PromiseEnvironmentLookup,
+                 PromiseEnvironmentAssign, PromiseExpressionLookup,
+                 PromiseExpressionAssign, EnvironmentCreate,
+                 EnvironmentVariableAssign, EnvironmentVariableRemove,
+                 EnvironmentVariableDefine, EnvironmentVariableLookup>;
 
 inline std::string to_string(const instruction_t &instruction) {
     std::string instruction_string;
