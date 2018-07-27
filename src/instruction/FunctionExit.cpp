@@ -8,11 +8,14 @@ const opcode_t &FunctionExit::get_opcode() {
 }
 
 FunctionExit FunctionExit::parse_arguments(const char *begin, char **end) {
-    call_id_t call_id{parse_call_id(*end + 1, end)};
 
-    bool jump{parse_boolean(*end + 1, end)};
+    call_id_t call_id{parse_call_id(begin, end)};
 
-    parse_record_separator(begin, end);
+    parse_operand_separator(*end, end);
+
+    bool jump{parse_boolean(*end, end)};
+
+    parse_instruction_separator(*end, end);
 
     return FunctionExit{call_id, jump};
 }

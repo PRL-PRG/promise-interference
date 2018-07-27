@@ -8,11 +8,14 @@ const opcode_t &PromiseEnvironmentLookup::get_opcode() {
 
 PromiseEnvironmentLookup
 PromiseEnvironmentLookup::parse_arguments(const char *begin, char **end) {
+
     promise_id_t id{parse_promise_id(begin, end)};
 
-    environment_id_t environment_id{parse_environment_id(*end + 1, end)};
+    parse_operand_separator(*end, end);
 
-    parse_record_separator(begin, end);
+    environment_id_t environment_id{parse_environment_id(*end, end)};
+
+    parse_instruction_separator(*end, end);
 
     return PromiseEnvironmentLookup{id, environment_id};
 }

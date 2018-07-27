@@ -8,15 +8,22 @@ const opcode_t &FunctionEntry::get_opcode() {
 }
 
 FunctionEntry FunctionEntry::parse_arguments(const char *begin, char **end) {
+
     std::string type{parse_sexp_type(begin, end)};
 
-    std::string id{parse_function_id(*end + 1, end)};
+    parse_operand_separator(*end, end);
 
-    call_id_t call_id{parse_call_id(*end + 1, end)};
+    std::string id{parse_function_id(*end, end)};
 
-    environment_id_t environment_id{parse_environment_id(*end + 1, end)};
+    parse_operand_separator(*end, end);
 
-    parse_record_separator(begin, end);
+    call_id_t call_id{parse_call_id(*end, end)};
+
+    parse_operand_separator(*end, end);
+
+    environment_id_t environment_id{parse_environment_id(*end, end)};
+
+    parse_instruction_separator(*end, end);
 
     return FunctionEntry{type, id, call_id, environment_id};
 }

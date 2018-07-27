@@ -10,9 +10,11 @@ PromiseExit PromiseExit::parse_arguments(const char *begin, char **end) {
 
     promise_id_t id{parse_promise_id(begin, end)};
 
-    bool jump{parse_boolean(*end + 1, end)};
+    parse_operand_separator(*end, end);
 
-    parse_record_separator(begin, end);
+    bool jump{parse_boolean(*end, end)};
+
+    parse_instruction_separator(*end, end);
 
     return PromiseExit{id, jump};
 }

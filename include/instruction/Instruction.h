@@ -59,7 +59,9 @@ class Instruction {
         if (!starts_with_opcode<T>(begin, end))
             return {};
 
-        return T::parse_arguments(*end + 1, end);
+        parse_operand_separator(*end, end);
+
+        return T::parse_arguments(*end, end);
     }
 
     template <typename T>

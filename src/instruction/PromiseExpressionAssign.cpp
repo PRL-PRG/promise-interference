@@ -8,11 +8,14 @@ const opcode_t &PromiseExpressionAssign::get_opcode() {
 
 PromiseExpressionAssign
 PromiseExpressionAssign::parse_arguments(const char *begin, char **end) {
+
     promise_id_t id{parse_promise_id(begin, end)};
 
-    expression_t expression{parse_expression(*end + 1, end)};
+    parse_operand_separator(*end, end);
 
-    parse_record_separator(begin, end);
+    expression_t expression{parse_expression(*end, end)};
+
+    parse_instruction_separator(*end, end);
 
     return PromiseExpressionAssign{id, expression};
 }

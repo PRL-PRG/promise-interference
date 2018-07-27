@@ -7,13 +7,18 @@ const opcode_t &PromiseCreate::get_opcode() {
 }
 
 PromiseCreate PromiseCreate::parse_arguments(const char *begin, char **end) {
+
     promise_id_t id{parse_promise_id(begin, end)};
 
-    environment_id_t environment_id{parse_environment_id(*end + 1, end)};
+    parse_operand_separator(*end, end);
 
-    expression_t expression{parse_expression(*end + 1, end)};
+    environment_id_t environment_id{parse_environment_id(*end, end)};
 
-    parse_record_separator(begin, end);
+    parse_operand_separator(*end, end);
+
+    expression_t expression{parse_expression(*end, end)};
+
+    parse_instruction_separator(*end, end);
 
     return PromiseCreate{id, environment_id, expression};
 }

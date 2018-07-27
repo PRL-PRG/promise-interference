@@ -1,6 +1,7 @@
 #ifndef PROMISE_INTERFERENCE_UTILITIES_H
 #define PROMISE_INTERFERENCE_UTILITIES_H
 
+#include <cassert>
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
@@ -79,7 +80,13 @@ inline position_t parse_position(const char *begin, char **end) {
     return std::strtoul(begin, end, 10);
 }
 
-inline void parse_record_separator(const char *begin, char **end) {
+inline void parse_instruction_separator(const char *begin, char **end) {
+    assert(*begin == RECORD_SEPARATOR);
+    *end = *end + 1;
+}
+
+inline void parse_operand_separator(const char *begin, char **end) {
+    assert(*begin == UNIT_SEPARATOR);
     *end = *end + 1;
 }
 

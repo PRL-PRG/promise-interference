@@ -6,83 +6,98 @@ namespace instruction {
 instruction_t Stream::parse_instruction(const char *begin, char **end) {
 
     if (Instruction::starts_with_opcode<FunctionEntry>(begin, end)) {
-        return Instruction::parse_arguments<FunctionEntry>(*end + 1, end);
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<FunctionEntry>(*end, end);
     }
 
     if (Instruction::starts_with_opcode<FunctionExit>(begin, end)) {
-        return Instruction::parse_arguments<FunctionExit>(*end + 1, end);
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<FunctionExit>(*end, end);
     }
 
     if (Instruction::starts_with_opcode<ArgumentPromiseAssociate>(begin, end)) {
-        return Instruction::parse_arguments<ArgumentPromiseAssociate>(*end + 1,
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<ArgumentPromiseAssociate>(*end,
                                                                       end);
     }
 
     if (Instruction::starts_with_opcode<EnvironmentVariableDefine>(begin,
                                                                    end)) {
-        return Instruction::parse_arguments<EnvironmentVariableDefine>(*end + 1,
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<EnvironmentVariableDefine>(*end,
                                                                        end);
     }
 
     if (Instruction::starts_with_opcode<EnvironmentVariableAssign>(begin,
                                                                    end)) {
-        return Instruction::parse_arguments<EnvironmentVariableAssign>(*end + 1,
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<EnvironmentVariableAssign>(*end,
                                                                        end);
     }
 
     if (Instruction::starts_with_opcode<EnvironmentVariableLookup>(begin,
                                                                    end)) {
-        return Instruction::parse_arguments<EnvironmentVariableLookup>(*end + 1,
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<EnvironmentVariableLookup>(*end,
                                                                        end);
     }
 
     if (Instruction::starts_with_opcode<EnvironmentVariableRemove>(begin,
                                                                    end)) {
-        return Instruction::parse_arguments<EnvironmentVariableRemove>(*end + 1,
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<EnvironmentVariableRemove>(*end,
                                                                        end);
     }
 
     if (Instruction::starts_with_opcode<EnvironmentCreate>(begin, end)) {
-        return Instruction::parse_arguments<EnvironmentCreate>(*end + 1, end);
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<EnvironmentCreate>(*end, end);
     }
 
     if (Instruction::starts_with_opcode<PromiseCreate>(begin, end)) {
-        return Instruction::parse_arguments<PromiseCreate>(*end + 1, end);
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<PromiseCreate>(*end, end);
     }
 
     if (Instruction::starts_with_opcode<PromiseEntry>(begin, end)) {
-        return Instruction::parse_arguments<PromiseEntry>(*end + 1, end);
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<PromiseEntry>(*end, end);
     }
 
     if (Instruction::starts_with_opcode<PromiseExit>(begin, end)) {
-        return Instruction::parse_arguments<PromiseExit>(*end + 1, end);
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<PromiseExit>(*end, end);
     }
 
     if (Instruction::starts_with_opcode<PromiseValueLookup>(begin, end)) {
-        return Instruction::parse_arguments<PromiseValueLookup>(*end + 1, end);
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<PromiseValueLookup>(*end, end);
     }
 
     if (Instruction::starts_with_opcode<PromiseValueAssign>(begin, end)) {
-        return Instruction::parse_arguments<PromiseValueAssign>(*end + 1, end);
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<PromiseValueAssign>(*end, end);
     }
 
     if (Instruction::starts_with_opcode<PromiseExpressionLookup>(begin, end)) {
-        return Instruction::parse_arguments<PromiseExpressionLookup>(*end + 1,
-                                                                     end);
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<PromiseExpressionLookup>(*end, end);
     }
 
     if (Instruction::starts_with_opcode<PromiseExpressionAssign>(begin, end)) {
-        return Instruction::parse_arguments<PromiseExpressionAssign>(*end + 1,
-                                                                     end);
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<PromiseExpressionAssign>(*end, end);
     }
 
     if (Instruction::starts_with_opcode<PromiseEnvironmentLookup>(begin, end)) {
-        return Instruction::parse_arguments<PromiseEnvironmentLookup>(*end + 1,
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<PromiseEnvironmentLookup>(*end,
                                                                       end);
     }
 
     if (Instruction::starts_with_opcode<PromiseEnvironmentAssign>(begin, end)) {
-        return Instruction::parse_arguments<PromiseEnvironmentAssign>(*end + 1,
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<PromiseEnvironmentAssign>(*end,
                                                                       end);
     }
 }
