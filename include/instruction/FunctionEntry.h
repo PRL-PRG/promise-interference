@@ -33,11 +33,6 @@ class FunctionEntry : public Instruction {
         return stream.str();
     }
 
-    void interpret(state::AbstractState &state) const override {
-        state.enter_scope(scope::FunctionScope{
-            get_type(), get_id(), get_call_id(), get_environment_id()});
-    }
-
     static const opcode_t &get_opcode();
 
     static FunctionEntry parse_arguments(const char *begin, char **end);

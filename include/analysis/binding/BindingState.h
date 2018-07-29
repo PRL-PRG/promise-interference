@@ -1,34 +1,30 @@
-#ifndef PROMISE_INTERFERENCE_ABSTRACT_STATE_H
-#define PROMISE_INTERFERENCE_ABSTRACT_STATE_H
+#ifndef PROMISE_INTERFERENCE_ANALYSIS_BINDING_BINDING_STATE_H
+#define PROMISE_INTERFERENCE_ANALYSIS_BINDING_BINDING_STATE_H
 
 #include "AbstractValue.h"
 #include "Variable.h"
-#include "scope/scope.h"
+#include "scope.h"
 #include <optional>
 #include <unordered_map>
 #include <unordered_set>
 #include <variant>
 #include <vector>
 
-namespace state {
+namespace analysis::binding {
 
-class AbstractState {
+class BindingState {
   public:
-    explicit AbstractState() : scope_stack_{scope::TopLevelScope{}} {}
+    explicit BindingState() : scope_stack_{TopLevel{}} {}
 
-    void enter_scope(const scope::scope_t &scope) {
-        scope_stack_.push_back(scope);
-    }
+    void enter_scope(const scope_t &scope) { scope_stack_.push_back(scope); }
 
-    scope::scope_t exit_scope() {
-        scope::scope_t element{scope_stack_.back()};
+    scope_t exit_scope() {
+        scope_t element{scope_stack_.back()};
         scope_stack_.pop_back();
         return element;
     }
 
-    const scope::scope_t &get_current_scope() const {
-        return scope_stack_.back();
-    }
+    const scope_t &get_current_scope() const { return scope_stack_.back(); }
 
     void assign_variable(const Variable variable,
                          const AbstractValue abstract_value) {
@@ -64,7 +60,7 @@ class AbstractState {
 
     void associate_lookup(const Variable variable,
                           const AbstractValue abstract_value) {
-        scope::scope_t scope{get_current_scope()};
+        scope_t scope{get_current_scope()};
 
         auto result = lookups_.insert({scope, {{variable, {abstract_value}}}});
         if (result.second) {
@@ -84,13 +80,13 @@ class AbstractState {
 
   private:
     template <typename T> void associate_lookup_() {}
-    std::vector<scope::scope_t> scope_stack_;
+    std::vector<scope_t> scope_stack_;
     std::unordered_map<Variable, AbstractValue> bindings_;
-    std::unordered_map<scope::scope_t,
+    std::unordered_map<scope_t,
                        std::unordered_map<Variable, std::vector<AbstractValue>>>
         lookups_;
     std::unordered_set<Variable> free_variables_;
 };
 }
 
-#endif /* PROMISE_INTERFERENCE_ABSTRACT_STATE_H */
+#endif /* PROMISE_INTERFERENCE_ANALYSIS_BINDING_BINDING_STATE_H */

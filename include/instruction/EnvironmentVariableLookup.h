@@ -9,47 +9,20 @@ class EnvironmentVariableLookup : public EnvironmentVariableAction {
 
   public:
     explicit EnvironmentVariableLookup(const environment_id_t id,
-                                       const state::Variable &variable,
+                                       const variable_id_t variable_id,
+                                       const variable_name_t &variable_name,
                                        const sexp_type_t &value_type)
-        : EnvironmentVariableAction{id, variable}, value_type_(value_type) {}
+        : EnvironmentVariableAction{id, variable_id, variable_name},
+          value_type_(value_type) {}
 
     const sexp_type_t &get_value_type() const { return value_type_; }
 
     std::string to_string() const override {
         std::stringstream stream;
         stream << get_opcode() << UNIT_SEPARATOR << get_id() << UNIT_SEPARATOR
-               << get_variable().get_id() << UNIT_SEPARATOR
-               << get_variable().get_name() << UNIT_SEPARATOR
-               << get_value_type() << RECORD_SEPARATOR;
+               << get_variable_id() << UNIT_SEPARATOR << get_variable_name()
+               << UNIT_SEPARATOR << get_value_type() << RECORD_SEPARATOR;
         return stream.str();
-    }
-
-    void interpret(state::AbstractState &state) const override {
-
-        auto optional_value{state.lookup_variable(get_variable())};
-
-        if (optional_value) {
-            if (optional_value->get_type() != get_value_type()) {
-                std::cerr << "type mismatch" << std::endl;
-                std::cerr << "variable: " << get_variable() << std::endl;
-                std::cerr << "value: " << *optional_value << std::endl;
-                std::cerr << "expected: " << get_value_type() << std::endl;
-                std::cerr << "obtained: " << optional_value->get_type()
-                          << std::endl;
-                // exit(EXIT_FAILURE);
-            } else {
-                state.associate_lookup(get_variable(), *optional_value);
-            }
-        } else if (!optional_value && (get_value_type() == "Special" ||
-                                       get_value_type() == "Builtin" ||
-                                       get_value_type() == "Closure" ||
-                                       get_value_type() == "Promise")) {
-            state.assign_variable(
-                get_variable(),
-                state::AbstractValue{scope::TopLevelScope{}, get_value_type()});
-        } else {
-            state.add_free_variable(get_variable());
-        }
     }
 
     static const opcode_t &get_opcode();

@@ -1,7 +1,8 @@
-#include "analysis/strictness.h"
+#include "analysis/strictness/interpreter.h"
 #include "instruction/Stream.h"
 #include "instruction/instruction.h"
 #include "utilities.h"
+#include <unordered_map>
 
 namespace analysis::strictness {
 

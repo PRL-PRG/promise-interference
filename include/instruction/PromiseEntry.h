@@ -2,7 +2,6 @@
 #define PROMISE_INTERFERENCE_PROMISE_ENTRY_INSTRUCTION_H
 
 #include "Instruction.h"
-#include "scope/scope.h"
 #include <sstream>
 
 namespace instruction {
@@ -20,10 +19,6 @@ class PromiseEntry : public Instruction {
         stream << get_opcode() << UNIT_SEPARATOR << get_id()
                << RECORD_SEPARATOR;
         return stream.str();
-    }
-
-    void interpret(state::AbstractState &state) const override {
-        state.enter_scope(scope::PromiseScope{get_id()});
     }
 
     static PromiseEntry parse_arguments(const char *begin, char **end);

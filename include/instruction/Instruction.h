@@ -1,10 +1,10 @@
 #ifndef PROMISE_INTERFERENCE_INSTRUCTION_INSTRUCTION_BASE_H
 #define PROMISE_INTERFERENCE_INSTRUCTION_INSTRUCTION_BASE_H
 
-#include "state/AbstractState.h"
 #include "utilities.h"
 #include <limits>
 #include <string>
+#include <optional>
 
 namespace instruction {
 
@@ -33,8 +33,6 @@ class Instruction {
         : line_number_{std::numeric_limits<std::size_t>::max()} {}
 
     virtual std::string to_string() const = 0;
-
-    virtual void interpret(state::AbstractState &state) const = 0;
 
     void set_line_number(line_number_t line_number) {
         line_number_ = line_number;

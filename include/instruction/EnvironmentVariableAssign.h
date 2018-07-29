@@ -9,25 +9,20 @@ class EnvironmentVariableAssign : public EnvironmentVariableAction {
 
   public:
     explicit EnvironmentVariableAssign(const environment_id_t id,
-                                       const state::Variable &variable,
+                                       const variable_id_t variable_id,
+                                       const variable_name_t &variable_name,
                                        const sexp_type_t &value_type)
-        : EnvironmentVariableAction{id, variable}, value_type_(value_type) {}
+        : EnvironmentVariableAction{id, variable_id, variable_name},
+          value_type_(value_type) {}
 
     const sexp_type_t &get_value_type() const { return value_type_; }
 
     std::string to_string() const override {
         std::stringstream stream;
         stream << get_opcode() << UNIT_SEPARATOR << get_id() << UNIT_SEPARATOR
-               << get_variable().get_id() << UNIT_SEPARATOR
-               << get_variable().get_name() << UNIT_SEPARATOR
-               << get_value_type() << RECORD_SEPARATOR;
+               << get_variable_id() << UNIT_SEPARATOR << get_variable_name()
+               << UNIT_SEPARATOR << get_value_type() << RECORD_SEPARATOR;
         return stream.str();
-    }
-
-    void interpret(state::AbstractState &state) const override {
-        state.assign_variable(
-            get_variable(),
-            state::AbstractValue{state.get_current_scope(), get_value_type()});
     }
 
     static const opcode_t &get_opcode();

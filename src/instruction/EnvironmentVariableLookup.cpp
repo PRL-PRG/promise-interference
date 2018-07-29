@@ -26,8 +26,7 @@ EnvironmentVariableLookup::parse_arguments(const char *begin, char **end) {
 
     parse_instruction_separator(*end, end);
 
-    return EnvironmentVariableLookup{
-        environment_id, state::Variable{variable_id, variable_name},
-        value_type};
+    return EnvironmentVariableLookup{environment_id, variable_id, variable_name,
+                                     value_type};
 }
 }

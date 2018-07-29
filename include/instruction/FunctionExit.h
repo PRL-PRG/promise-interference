@@ -23,21 +23,6 @@ class FunctionExit : public Instruction {
         return stream.str();
     }
 
-    void interpret(state::AbstractState &state) const override {
-        scope::scope_t scope{state.exit_scope()};
-
-        if (std::holds_alternative<scope::FunctionScope>(scope) &&
-            std::get<scope::FunctionScope>(scope).get_call_id() ==
-                get_call_id()) {
-            return;
-        }
-
-        std::cerr << "scope mismatch" << std::endl;
-        std::cerr << "expected: " << to_string() << std::endl;
-        std::cerr << "obtained: " << scope::to_string(scope) << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
     static const opcode_t &get_opcode();
 
     static FunctionExit parse_arguments(const char *begin, char **end);

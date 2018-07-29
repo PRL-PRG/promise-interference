@@ -19,8 +19,6 @@ class PromiseEnvironmentLookup : public PromiseEnvironment {
         return stream.str();
     }
 
-    void interpret(state::AbstractState &state) const override {}
-
     static const opcode_t &get_opcode();
 
     static PromiseEnvironmentLookup parse_arguments(const char *begin,

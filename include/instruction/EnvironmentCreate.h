@@ -20,8 +20,6 @@ class EnvironmentCreate : public Instruction {
         return stream.str();
     }
 
-    void interpret(state::AbstractState &state) const override {}
-
     static const opcode_t &get_opcode();
 
     static bool starts_with_opcode(const char *begin, char **end);

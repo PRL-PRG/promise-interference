@@ -19,8 +19,6 @@ class PromiseExpressionAssign : public PromiseExpression {
         return stream.str();
     }
 
-    void interpret(state::AbstractState &state) const override {}
-
     static const opcode_t &get_opcode();
 
     static PromiseExpressionAssign parse_arguments(const char *begin,

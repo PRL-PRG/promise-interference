@@ -1,17 +1,17 @@
-#ifndef PROMISE_INTERFERENCE_ABSTRACT_VALUE_H
-#define PROMISE_INTERFERENCE_ABSTRACT_VALUE_H
+#ifndef PROMISE_INTERFERENCE_ANALYSIS_BINDING_ABSTRACT_VALUE_H
+#define PROMISE_INTERFERENCE_ANALYSIS_BINDING_ABSTRACT_VALUE_H
 
-#include "scope/scope.h"
+#include "scope.h"
 #include "utilities.h"
 
-namespace state {
+namespace analysis::binding {
 
 class AbstractValue {
   public:
-    AbstractValue(const scope::scope_t &scope, const sexp_type_t &type)
+    AbstractValue(const scope_t &scope, const sexp_type_t &type)
         : scope_(scope), type_(type) {}
 
-    const scope::scope_t &get_scope() const { return scope_; }
+    const scope_t &get_scope() const { return scope_; }
 
     const sexp_type_t &get_type() const { return type_; }
 
@@ -30,14 +30,15 @@ class AbstractValue {
     }
 
   private:
-    scope::scope_t scope_;
+    scope_t scope_;
     sexp_type_t type_;
 };
 }
 
-inline std::ostream &operator<<(std::ostream &os,
-                                const state::AbstractValue &abstract_value) {
+inline std::ostream &
+operator<<(std::ostream &os,
+           const analysis::binding::AbstractValue &abstract_value) {
     return os << abstract_value.to_string();
 }
 
-#endif /* PROMISE_INTERFERENCE_ABSTRACT_VALUE_H */
+#endif /* PROMISE_INTERFERENCE_ANALYSIS_BINDING_ABSTRACT_VALUE_H */

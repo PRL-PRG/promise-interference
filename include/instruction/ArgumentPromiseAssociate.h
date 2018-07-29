@@ -41,12 +41,6 @@ class ArgumentPromiseAssociate : public Instruction {
         return stream.str();
     }
 
-    void interpret(state::AbstractState &state) const override {
-        // TODO
-        // state.enter_scope(scope::FunctionScope{
-        //     get_type(), get_id(), get_call_id(), get_environment_id()});
-    }
-
     static const opcode_t &get_opcode();
 
     static ArgumentPromiseAssociate parse_arguments(const char *begin,

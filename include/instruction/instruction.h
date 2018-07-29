@@ -18,6 +18,7 @@
 #include "PromiseExpressionLookup.h"
 #include "PromiseValueAssign.h"
 #include "PromiseValueLookup.h"
+#include <variant>
 
 namespace instruction {
 

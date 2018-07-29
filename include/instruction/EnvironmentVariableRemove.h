@@ -9,19 +9,16 @@ class EnvironmentVariableRemove : public EnvironmentVariableAction {
 
   public:
     explicit EnvironmentVariableRemove(const environment_id_t id,
-                                       const state::Variable &variable)
-        : EnvironmentVariableAction{id, variable} {}
+                                       const variable_id_t variable_id,
+                                       const variable_name_t &variable_name)
+        : EnvironmentVariableAction{id, variable_id, variable_name} {}
 
     std::string to_string() const override {
         std::stringstream stream;
         stream << get_opcode() << UNIT_SEPARATOR << get_id() << UNIT_SEPARATOR
-               << get_variable().get_id() << UNIT_SEPARATOR
-               << get_variable().get_name() << RECORD_SEPARATOR;
+               << get_variable_id() << UNIT_SEPARATOR << get_variable_name()
+               << RECORD_SEPARATOR;
         return stream.str();
-    }
-
-    void interpret(state::AbstractState &state) const override {
-        state.remove_variable(get_variable());
     }
 
     static const opcode_t &get_opcode();

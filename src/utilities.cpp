@@ -9,6 +9,8 @@
  */
 const char RECORD_SEPARATOR = 0x1e;
 const char UNIT_SEPARATOR = 0x1f;
+const line_number_t UNDEFINED_LINE_NUMBER =
+    std::numeric_limits<line_number_t>::max();
 
 std::pair<void *, std::size_t> mmap_file(const std::string &filepath) {
 

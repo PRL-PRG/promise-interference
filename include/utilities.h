@@ -26,6 +26,7 @@ void munmap_file(void *data, std::size_t size);
 
 extern const char RECORD_SEPARATOR;
 extern const char UNIT_SEPARATOR;
+extern const line_number_t UNDEFINED_LINE_NUMBER;
 
 static inline std::string parse_upto_separator(const char *begin, char **end) {
     std::size_t size = 0;

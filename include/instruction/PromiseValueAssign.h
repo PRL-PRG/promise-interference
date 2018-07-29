@@ -19,8 +19,6 @@ class PromiseValueAssign : public PromiseValue {
         return stream.str();
     }
 
-    void interpret(state::AbstractState &state) const override {}
-
     static const opcode_t &get_opcode();
 
     static PromiseValueAssign parse_arguments(const char *begin, char **end);

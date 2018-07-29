@@ -1,8 +1,7 @@
-#include "analysis/strictness.h"
+#include "analysis/binding/interpreter.h"
+#include "analysis/strictness/interpreter.h"
 #include "instruction/Stream.h"
 #include "instruction/instruction.h"
-#include "interpreter/interpreter.h"
-#include "state/AbstractState.h"
 #include <chrono>
 #include <cstdlib>
 #include <fstream>
@@ -39,7 +38,7 @@ int main(int argc, char *argv[]) {
               << std::flush;
 
     t1 = high_resolution_clock::now();
-    auto abstract_state{interpreter::interpret(lazy_stream)};
+    auto lazy_binding_state{analysis::binding::interpret(lazy_stream)};
     t2 = high_resolution_clock::now();
 
     std::cout << duration_cast<duration<double>>(t2 - t1).count() << " "
@@ -54,7 +53,7 @@ int main(int argc, char *argv[]) {
               << std::flush;
 
     t1 = high_resolution_clock::now();
-    auto strict_state{interpreter::interpret(strict_stream)};
+    auto strict_binding_state{analysis::binding::interpret(strict_stream)};
     t2 = high_resolution_clock::now();
 
     std::cout << duration_cast<duration<double>>(t2 - t1).count() << " "

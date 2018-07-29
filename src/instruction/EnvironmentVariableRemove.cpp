@@ -22,7 +22,7 @@ EnvironmentVariableRemove::parse_arguments(const char *begin, char **end) {
 
     parse_instruction_separator(*end, end);
 
-    return EnvironmentVariableRemove{
-        environment_id, state::Variable{variable_id, variable_name}};
+    return EnvironmentVariableRemove{environment_id, variable_id,
+                                     variable_name};
 }
 }

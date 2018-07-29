@@ -1,11 +1,11 @@
-#ifndef PROMISE_INTERFERENCE_VARIABLE_H
-#define PROMISE_INTERFERENCE_VARIABLE_H
+#ifndef PROMISE_INTERFERENCE_ANALYSIS_BINDING_VARIABLE_H
+#define PROMISE_INTERFERENCE_ANALYSIS_BINDING_VARIABLE_H
 
 #include "utilities.h"
 #include <iostream>
 #include <sstream>
 
-namespace state {
+namespace analysis::binding {
 
 class Variable {
   public:
@@ -45,15 +45,15 @@ class Variable {
 }
 
 inline std::ostream &operator<<(std::ostream &os,
-                                const state::Variable &variable) {
+                                const analysis::binding::Variable &variable) {
     return os << variable.to_string();
 }
 
 namespace std {
 
-template <> struct hash<state::Variable> {
+template <> struct hash<analysis::binding::Variable> {
 
-    std::size_t operator()(const state::Variable &variable) const {
+    std::size_t operator()(const analysis::binding::Variable &variable) const {
         // Compute individual hash values for first, second and third
         // http://stackoverflow.com/a/1646913/126995
         std::size_t res = 17;
@@ -64,4 +64,4 @@ template <> struct hash<state::Variable> {
 };
 }
 
-#endif /* PROMISE_INTERFERENCE_VARIABLE_H */
+#endif /* PROMISE_INTERFERENCE_ANALYSIS_BINDING_VARIABLE_H */
