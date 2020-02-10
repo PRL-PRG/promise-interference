@@ -2,13 +2,15 @@
 #define PROMISE_INTERFERENCE_INSTRUCTION_INSTRUCTION_H
 
 #include "ArgumentPromiseAssociate.h"
+#include "BuiltinEntry.h"
+#include "BuiltinExit.h"
+#include "ClosureEntry.h"
+#include "ClosureExit.h"
 #include "EnvironmentCreate.h"
 #include "EnvironmentVariableAssign.h"
 #include "EnvironmentVariableDefine.h"
 #include "EnvironmentVariableLookup.h"
 #include "EnvironmentVariableRemove.h"
-#include "FunctionEntry.h"
-#include "FunctionExit.h"
 #include "PromiseCreate.h"
 #include "PromiseEntry.h"
 #include "PromiseEnvironmentAssign.h"
@@ -18,12 +20,15 @@
 #include "PromiseExpressionLookup.h"
 #include "PromiseValueAssign.h"
 #include "PromiseValueLookup.h"
+#include "SpecialEntry.h"
+#include "SpecialExit.h"
 #include <variant>
 
 namespace instruction {
 
 using instruction_t =
-    std::variant<FunctionEntry, FunctionExit, PromiseCreate, PromiseEntry,
+    std::variant<ClosureEntry, SpecialEntry, BuiltinEntry, ClosureExit,
+                 SpecialExit, BuiltinExit, PromiseCreate, PromiseEntry,
                  PromiseExit, ArgumentPromiseAssociate, PromiseValueLookup,
                  PromiseValueAssign, PromiseEnvironmentLookup,
                  PromiseEnvironmentAssign, PromiseExpressionLookup,
@@ -55,6 +60,6 @@ inline line_number_t get_line_number(const instruction_t &instruction) {
                instruction);
     return line_number;
 }
-}
+} // namespace instruction
 
 #endif /* PROMISE_INTERFERENCE_INSTRUCTION_INSTRUCTION_H */

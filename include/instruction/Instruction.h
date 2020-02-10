@@ -3,15 +3,19 @@
 
 #include "utilities.h"
 #include <limits>
-#include <string>
 #include <optional>
+#include <string>
 
 namespace instruction {
 
 class Instruction {
   public:
-    static const opcode_t OPCODE_FUNCTION_ENTRY;
-    static const opcode_t OPCODE_FUNCTION_EXIT;
+    static const opcode_t OPCODE_CLOSURE_ENTRY;
+    static const opcode_t OPCODE_CLOSURE_EXIT;
+    static const opcode_t OPCODE_SPECIAL_ENTRY;
+    static const opcode_t OPCODE_SPECIAL_EXIT;
+    static const opcode_t OPCODE_BUILTIN_ENTRY;
+    static const opcode_t OPCODE_BUILTIN_EXIT;
     static const opcode_t OPCODE_ARGUMENT_PROMISE_ASSOCIATE;
     static const opcode_t OPCODE_PROMISE_CREATE;
     static const opcode_t OPCODE_PROMISE_ENTRY;
@@ -70,6 +74,6 @@ class Instruction {
   private:
     line_number_t line_number_;
 };
-}
+} // namespace instruction
 
 #endif /* PROMISE_INTERFERENCE_INSTRUCTION_INSTRUCTION_BASE_H */

@@ -2,8 +2,12 @@
 
 namespace instruction {
 
-const opcode_t Instruction::OPCODE_FUNCTION_ENTRY = "fnb";
-const opcode_t Instruction::OPCODE_FUNCTION_EXIT = "fnf";
+const opcode_t Instruction::OPCODE_CLOSURE_ENTRY = "clb";
+const opcode_t Instruction::OPCODE_CLOSURE_EXIT = "clf";
+const opcode_t Instruction::OPCODE_SPECIAL_ENTRY = "spb";
+const opcode_t Instruction::OPCODE_SPECIAL_EXIT = "spf";
+const opcode_t Instruction::OPCODE_BUILTIN_ENTRY = "bub";
+const opcode_t Instruction::OPCODE_BUILTIN_EXIT = "buf";
 const opcode_t Instruction::OPCODE_ARGUMENT_PROMISE_ASSOCIATE = "apa";
 const opcode_t Instruction::OPCODE_PROMISE_CREATE = "prc";
 const opcode_t Instruction::OPCODE_PROMISE_ENTRY = "prb";

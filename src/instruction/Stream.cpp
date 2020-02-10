@@ -5,14 +5,34 @@ namespace instruction {
 
 instruction_t Stream::parse_instruction(const char *begin, char **end) {
 
-    if (Instruction::starts_with_opcode<FunctionEntry>(begin, end)) {
+    if (Instruction::starts_with_opcode<ClosureEntry>(begin, end)) {
         parse_operand_separator(*end, end);
-        return Instruction::parse_arguments<FunctionEntry>(*end, end);
+        return Instruction::parse_arguments<ClosureEntry>(*end, end);
     }
 
-    if (Instruction::starts_with_opcode<FunctionExit>(begin, end)) {
+    if (Instruction::starts_with_opcode<ClosureExit>(begin, end)) {
         parse_operand_separator(*end, end);
-        return Instruction::parse_arguments<FunctionExit>(*end, end);
+        return Instruction::parse_arguments<ClosureExit>(*end, end);
+    }
+
+    if (Instruction::starts_with_opcode<BuiltinEntry>(begin, end)) {
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<BuiltinEntry>(*end, end);
+    }
+
+    if (Instruction::starts_with_opcode<BuiltinExit>(begin, end)) {
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<BuiltinExit>(*end, end);
+    }
+
+    if (Instruction::starts_with_opcode<SpecialEntry>(begin, end)) {
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<SpecialEntry>(*end, end);
+    }
+
+    if (Instruction::starts_with_opcode<SpecialExit>(begin, end)) {
+        parse_operand_separator(*end, end);
+        return Instruction::parse_arguments<SpecialExit>(*end, end);
     }
 
     if (Instruction::starts_with_opcode<ArgumentPromiseAssociate>(begin, end)) {
@@ -103,7 +123,7 @@ instruction_t Stream::parse_instruction(const char *begin, char **end) {
 }
 
 Stream Stream::parse(std::filesystem::path instruction_filepath) {
-    const auto & [ data, size ] = mmap_file(instruction_filepath.c_str());
+    const auto &[data, size] = mmap_file(instruction_filepath.c_str());
     char *current = static_cast<char *>(data);
     char *end = current + size;
     char *next;
@@ -114,6 +134,7 @@ Stream Stream::parse(std::filesystem::path instruction_filepath) {
 
     while (current != end) {
         instruction_t instruction{parse_instruction(current, &next)};
+        std::cerr << instruction << std::endl;
         set_line_number(instruction, line_number);
         instructions.push_back(instruction);
         ++line_number;
@@ -124,4 +145,4 @@ Stream Stream::parse(std::filesystem::path instruction_filepath) {
 
     return Stream{std::move(instructions)};
 }
-}
+} // namespace instruction
