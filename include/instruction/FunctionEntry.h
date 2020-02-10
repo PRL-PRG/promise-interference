@@ -43,7 +43,7 @@ class FunctionEntry : public Instruction {
     call_id_t call_id_;
     environment_id_t environment_id_;
 };
-}
+} // namespace instruction
 
 inline std::ostream &operator<<(std::ostream &os,
                                 const instruction::FunctionEntry &instruction) {
