@@ -4,7 +4,7 @@
 #include "Edge.h"
 #include <vector>
 
-namespace analysis::strictness {
+namespace analysis::strictness::graph {
 
 class Node {
   public:
@@ -51,6 +51,6 @@ class Node {
     std::vector<Edge> edges_;
 };
 
-} // namespace analysis::strictness
+} // namespace analysis::strictness::graph
 
 #endif /* PROMISE_INTERFERENCE_ANALYSIS_STRICTNESS_NODE_H */

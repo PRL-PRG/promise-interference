@@ -4,7 +4,7 @@
 #include "Annotation.h"
 #include <ostream>
 
-namespace analysis::strictness {
+namespace analysis::strictness::graph {
 
 class Node;
 
@@ -40,6 +40,6 @@ class Edge {
     Annotation annotation_;
 };
 
-} // namespace analysis::strictness
+} // namespace analysis::strictness::graph
 
 #endif /* PROMISE_INTERFERENCE_ANALYSIS_STRICTNESS_EDGE_H */

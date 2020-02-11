@@ -4,7 +4,7 @@
 #include "Node.h"
 #include "utilities.h"
 
-namespace analysis::strictness {
+namespace analysis::strictness::graph {
 
 class PromiseNode;
 
@@ -49,7 +49,6 @@ class CallNode : public Node {
     std::vector<PromiseNode *> arguments_;
 };
 
-} // namespace analysis::strictness
+} // namespace analysis::strictness::graph
 
 #endif /* PROMISE_INTERFERENCE_ANALYSIS_STRICTNESS_CALL_NODE_H */
-

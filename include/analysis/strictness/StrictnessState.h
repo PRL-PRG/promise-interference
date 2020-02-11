@@ -1,8 +1,8 @@
 #ifndef PROMISE_INTERFERENCE_ANALYSIS_STRICTNESS_STRICTNESS_STATE_H
 #define PROMISE_INTERFERENCE_ANALYSIS_STRICTNESS_STRICTNESS_STATE_H
 
-#include "CallNode.h"
-#include "PromiseNode.h"
+#include "graph/CallNode.h"
+#include "graph/PromiseNode.h"
 #include "utilities.h"
 #include <iostream>
 #include <unordered_map>
@@ -42,10 +42,10 @@ class StrictnessState {
          * variable. We want to retain order of variable read-write and
          * write-write */
 
-        Node *current_context = stack_.back();
-        std::vector<Node *> &user_seq = users_[variable_id];
+        graph::Node *current_context = stack_.back();
+        std::vector<graph::Node *> &user_seq = users_[variable_id];
         if (user_seq.size() != 0) {
-            Node *user_context = user_seq.back();
+            graph::Node *user_context = user_seq.back();
             /* create edge iff the two nodes are different */
             if (user_context != current_context) {
                 user_context->add_edge(current_context)
@@ -75,10 +75,10 @@ class StrictnessState {
          * variable. We want to retain order of variable write-read. The order
          * of variable read-read is not important. */
 
-        Node *current_context = stack_.back();
-        std::vector<Node *> &writer_seq = writers_[variable_id];
+        graph::Node *current_context = stack_.back();
+        std::vector<graph::Node *> &writer_seq = writers_[variable_id];
         if (writer_seq.size() != 0) {
-            Node *writer_context = writer_seq.back();
+            graph::Node *writer_context = writer_seq.back();
             /* create edge iff the two nodes are different */
             if (writer_context != current_context) {
                 writer_context->add_edge(current_context)
@@ -94,8 +94,8 @@ class StrictnessState {
         users_[variable_id].push_back(stack_.back());
     }
 
-    PromiseNode *create_promise(const promise_id_t promise_id) {
-        PromiseNode *promise = new PromiseNode(promise_id);
+    graph::PromiseNode *create_promise(const promise_id_t promise_id) {
+        graph::PromiseNode *promise = new graph::PromiseNode(promise_id);
 
         promises_.push_back(promise);
 
@@ -104,7 +104,7 @@ class StrictnessState {
         return promise;
     }
 
-    PromiseNode *get_or_create_promise(const promise_id_t promise_id) {
+    graph::PromiseNode *get_or_create_promise(const promise_id_t promise_id) {
         auto iter = promise_map_.find(promise_id);
 
         if (iter == promise_map_.end()) {
@@ -117,14 +117,14 @@ class StrictnessState {
     void associate_promise(promise_id_t promise_id, call_id_t call_id,
                            int formal_paramter_position,
                            const variable_name_t &variable_name) {
-        Node *node = stack_.back();
+        graph::Node *node = stack_.back();
 
         if (node->is_promise()) {
             std::cerr << "Promise encountered on stack on function exit";
             exit(EXIT_FAILURE);
         }
 
-        CallNode *call = static_cast<CallNode *>(node);
+        graph::CallNode *call = static_cast<graph::CallNode *>(node);
 
         if (call->get_call_id() != call_id) {
             std::cerr
@@ -132,15 +132,15 @@ class StrictnessState {
             exit(EXIT_FAILURE);
         }
 
-        PromiseNode *promise = get_or_create_promise(promise_id);
+        graph::PromiseNode *promise = get_or_create_promise(promise_id);
         promise->set_parameter_name(variable_name);
         promise->set_formal_parameter_position(formal_paramter_position);
-        call->add_edge(promise).set_type(Edge::Type::Argument);
+        call->add_edge(promise).set_type(graph::Edge::Type::Argument);
         call->add_argument(promise);
     }
 
     void enter_promise(const promise_id_t promise_id) {
-        PromiseNode *promise = get_or_create_promise(promise_id);
+        graph::PromiseNode *promise = get_or_create_promise(promise_id);
 
         promise->set_forced();
 
@@ -148,14 +148,14 @@ class StrictnessState {
     }
 
     void exit_promise(const promise_id_t promise_id) {
-        Node *node = stack_.back();
+        graph::Node *node = stack_.back();
 
         if (node->is_call()) {
             std::cerr << "Function encountered on stack on promise exit";
             exit(EXIT_FAILURE);
         }
 
-        PromiseNode *promise = static_cast<PromiseNode *>(node);
+        graph::PromiseNode *promise = static_cast<graph::PromiseNode *>(node);
 
         if (promise->get_promise_id() != promise_id) {
             std::cerr << "Promise entry id mismatches promise exit id.";
@@ -166,7 +166,7 @@ class StrictnessState {
     }
 
     void metaprogram_promise(const promise_id_t promise_id) {
-        PromiseNode *promise = get_or_create_promise(promise_id);
+        graph::PromiseNode *promise = get_or_create_promise(promise_id);
 
         promise->set_metaprogrammed();
     }
@@ -174,32 +174,33 @@ class StrictnessState {
     void enter_function(const function_id_t &function_id,
                         const call_id_t call_id,
                         const std::string &function_names) {
-        CallNode *call = new CallNode(call_id, function_id, function_names);
+        graph::CallNode *call =
+            new graph::CallNode(call_id, function_id, function_names);
 
         calls_.push_back(call);
 
-        Node *caller = nullptr;
+        graph::Node *caller = nullptr;
 
         if (!stack_.empty()) {
             caller = stack_.back();
         }
 
         if (caller != nullptr) {
-            caller->add_edge(call).set_type(Edge::Type::Call);
+            caller->add_edge(call).set_type(graph::Edge::Type::Call);
         }
 
         stack_.push_back(call);
     }
 
     void exit_function(const call_id_t call_id) {
-        Node *node = stack_.back();
+        graph::Node *node = stack_.back();
 
         if (node->is_promise()) {
             std::cerr << "Promise encountered on stack on function exit";
             exit(EXIT_FAILURE);
         }
 
-        CallNode *call = static_cast<CallNode *>(node);
+        graph::CallNode *call = static_cast<graph::CallNode *>(node);
 
         if (call->get_call_id() != call_id) {
             std::cerr
@@ -220,12 +221,12 @@ class StrictnessState {
 
         os << indent(4) << "{ /* nodes */" << std::endl;
 
-        for (const CallNode *call : calls_) {
+        for (const graph::CallNode *call : calls_) {
             os << indent(8);
             call->to_dot(os);
         }
 
-        for (const PromiseNode *promise : promises_) {
+        for (const graph::PromiseNode *promise : promises_) {
             os << indent(8);
             promise->to_dot(os);
         }
@@ -234,15 +235,15 @@ class StrictnessState {
 
         os << indent(4) << "{ /* edges */" << std::endl;
 
-        for (const CallNode *call : calls_) {
-            for (const Edge &edge : call->get_edges()) {
+        for (const graph::CallNode *call : calls_) {
+            for (const graph::Edge &edge : call->get_edges()) {
                 os << indent(8);
                 edge.to_dot(os);
             }
         }
 
-        for (const PromiseNode *promise : promises_) {
-            for (const Edge &edge : promise->get_edges()) {
+        for (const graph::PromiseNode *promise : promises_) {
+            for (const graph::Edge &edge : promise->get_edges()) {
                 os << indent(8);
                 edge.to_dot(os);
             }
@@ -252,7 +253,7 @@ class StrictnessState {
 
         os << indent(4) << "/* clusters */" << std::endl << std::endl;
 
-        for (const CallNode *call : calls_) {
+        for (const graph::CallNode *call : calls_) {
 
             os << indent(4) << "subgraph cluster_" << call->get_call_id()
                << " {" << std::endl;
@@ -266,7 +267,7 @@ class StrictnessState {
 
             os << indent(8) << call->get_dot_node_name() << "; ";
 
-            for (const PromiseNode *promise : call->get_arguments()) {
+            for (const graph::PromiseNode *promise : call->get_arguments()) {
                 os << promise->get_dot_node_name() << "; ";
             }
 
@@ -279,13 +280,13 @@ class StrictnessState {
     }
 
   private:
-    std::vector<Node *> stack_;
-    std::vector<CallNode *> calls_;
-    std::vector<PromiseNode *> promises_;
-    std::unordered_map<variable_id_t, std::vector<Node *>> readers_;
-    std::unordered_map<variable_id_t, std::vector<Node *>> writers_;
-    std::unordered_map<variable_id_t, std::vector<Node *>> users_;
-    std::unordered_map<promise_id_t, PromiseNode *> promise_map_;
+    std::vector<graph::Node *> stack_;
+    std::vector<graph::CallNode *> calls_;
+    std::vector<graph::PromiseNode *> promises_;
+    std::unordered_map<variable_id_t, std::vector<graph::Node *>> readers_;
+    std::unordered_map<variable_id_t, std::vector<graph::Node *>> writers_;
+    std::unordered_map<variable_id_t, std::vector<graph::Node *>> users_;
+    std::unordered_map<promise_id_t, graph::PromiseNode *> promise_map_;
 };
 } // namespace analysis::strictness
 

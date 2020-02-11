@@ -5,7 +5,7 @@
 #include <ostream>
 #include <unordered_set>
 
-namespace analysis::strictness {
+namespace analysis::strictness::graph {
 
 class Annotation {
   public:
@@ -46,6 +46,6 @@ class Annotation {
     std::unordered_set<variable_name_t> write_variables_;
 };
 
-} // namespace analysis::strictness
+} // namespace analysis::strictness::graph
 
 #endif /* PROMISE_INTERFERENCE_ANALYSIS_STRICTNESS_ANNOTATION_H */

@@ -4,7 +4,7 @@
 #include "Node.h"
 #include <ostream>
 
-namespace analysis::strictness {
+namespace analysis::strictness::graph {
 
 class PromiseNode : public Node {
   public:
@@ -81,6 +81,6 @@ class PromiseNode : public Node {
     int formal_parameter_position_;
 };
 
-} // namespace analysis::strictness
+} // namespace analysis::strictness::graph
 
 #endif /* PROMISE_INTERFERENCE_ANALYSIS_STRICTNESS_PROMISE_NODE_H */

@@ -1,7 +1,7 @@
-#include "analysis/strictness/Edge.h"
-#include "analysis/strictness/Node.h"
+#include "analysis/strictness/graph/Edge.h"
+#include "analysis/strictness/graph/Node.h"
 
-void analysis::strictness::Edge::to_dot(std::ostream &os) const {
+void analysis::strictness::graph::Edge::to_dot(std::ostream &os) const {
     const Node *source = get_source();
     const Node *target = get_target();
     const Annotation &annotation = get_annotation();
