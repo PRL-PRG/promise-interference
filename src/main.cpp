@@ -1,4 +1,3 @@
-#include "analysis/binding/interpreter.h"
 #include "analysis/strictness/interpreter.h"
 #include "instruction/Stream.h"
 #include "instruction/instruction.h"
@@ -11,15 +10,16 @@
 
 int main(int argc, char *argv[]) {
 
-    using std::chrono::high_resolution_clock;
     using std::chrono::duration;
     using std::chrono::duration_cast;
+    using std::chrono::high_resolution_clock;
 
     if (argc < 4) {
         std::cerr << "incorrect number of arguments passed.\n";
-        std::cerr << argv[0] << " <lazy-trace-filepath>"
-                                " <eager-trace-filepath>"
-                                " <trace-comparison-filepath>\n";
+        std::cerr << argv[0]
+                  << " <lazy-trace-filepath>"
+                     " <eager-trace-filepath>"
+                     " <trace-comparison-filepath>\n";
         return EXIT_FAILURE;
     }
 
@@ -37,35 +37,38 @@ int main(int argc, char *argv[]) {
               << duration_cast<duration<double>>(t2 - t1).count() << " "
               << std::flush;
 
-    t1 = high_resolution_clock::now();
-    auto lazy_binding_state{analysis::binding::interpret(lazy_stream)};
-    t2 = high_resolution_clock::now();
-
-    std::cout << duration_cast<duration<double>>(t2 - t1).count() << " "
-              << std::flush;
+    std::cout << "Here\n";
 
     t1 = high_resolution_clock::now();
-    auto strict_stream{analysis::strictness::rewrite(lazy_stream)};
+    auto strictness_state{analysis::strictness::interpret(lazy_stream)};
     t2 = high_resolution_clock::now();
 
-    std::cout << strict_stream.size() << " "
-              << duration_cast<duration<double>>(t2 - t1).count() << " "
-              << std::flush;
+    std::ofstream trace_comparison_file{trace_comparison_filepath};
 
-    t1 = high_resolution_clock::now();
-    auto strict_binding_state{analysis::binding::interpret(strict_stream)};
-    t2 = high_resolution_clock::now();
+    trace_comparison_file << strictness_state;
 
-    std::cout << duration_cast<duration<double>>(t2 - t1).count() << " "
-              << std::flush;
+    trace_comparison_file.close();
 
-    t1 = high_resolution_clock::now();
-    std::ofstream strict_trace_file{strict_trace_filepath};
-    strict_trace_file << strict_stream;
-    strict_trace_file.close();
-    t2 = high_resolution_clock::now();
+    // std::cout << strict_stream.size() << " "
+    //           << duration_cast<duration<double>>(t2 - t1).count() << " "
+    //           << std::flush;
 
-    std::cout << duration_cast<duration<double>>(t2 - t1).count() << std::endl;
+    // t1 = high_resolution_clock::now();
+    // auto
+    // strict_binding_state{analysis::binding::interpret(strict_stream)}; t2
+    // = high_resolution_clock::now();
+
+    // std::cout << duration_cast<duration<double>>(t2 - t1).count() << " "
+    //           << std::flush;
+
+    // t1 = high_resolution_clock::now();
+    // std::ofstream strict_trace_file{strict_trace_filepath};
+    // strict_trace_file << strict_stream;
+    // strict_trace_file.close();
+    // t2 = high_resolution_clock::now();
+
+    // std::cout << duration_cast<duration<double>>(t2 - t1).count() <<
+    // std::endl;
 
     return EXIT_SUCCESS;
 }
