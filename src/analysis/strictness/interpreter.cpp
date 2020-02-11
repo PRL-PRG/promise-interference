@@ -4,31 +4,47 @@
 
 namespace analysis::strictness {
 
-void interpret(const instruction::FunctionEntry &i, StrictnessState &state) {}
+void interpret(const instruction::ClosureEntry &i, StrictnessState &state) {
+    state.enter_function(i.get_function_id(), i.get_call_id(),
+                         i.get_function_names());
+}
 
-void interpret(const instruction::FunctionExit &i, StrictnessState &state) {}
+void interpret(const instruction::ClosureExit &i, StrictnessState &state) {
+    state.exit_function(i.get_call_id());
+}
+
+void interpret(const instruction::BuiltinEntry &i, StrictnessState &state) {}
+
+void interpret(const instruction::BuiltinExit &i, StrictnessState &state) {}
+
+void interpret(const instruction::SpecialEntry &i, StrictnessState &state) {}
+
+void interpret(const instruction::SpecialExit &i, StrictnessState &state) {}
 
 void interpret(const instruction::ArgumentPromiseAssociate &i,
-               StrictnessState &state) {}
+               StrictnessState &state) {
+    state.associate_promise(i.get_promise_id(), i.get_call_id(),
+                            i.get_formal_position(), i.get_variable_name());
+}
 
 void interpret(const instruction::EnvironmentVariableDefine &i,
                StrictnessState &state) {
-    state.define_variable(i.get_variable_id());
+    state.write_variable(i.get_variable_id(), i.get_variable_name());
 }
 
 void interpret(const instruction::EnvironmentVariableAssign &i,
                StrictnessState &state) {
-    state.assign_variable(i.get_variable_id());
+    state.write_variable(i.get_variable_id(), i.get_variable_name());
 }
 
 void interpret(const instruction::EnvironmentVariableLookup &i,
                StrictnessState &state) {
-    state.lookup_variable(i.get_variable_id());
+    state.read_variable(i.get_variable_id(), i.get_variable_name());
 }
 
 void interpret(const instruction::EnvironmentVariableRemove &i,
                StrictnessState &state) {
-    state.remove_variable(i.get_variable_id());
+    state.write_variable(i.get_variable_id(), i.get_variable_name());
 }
 
 void interpret(const instruction::EnvironmentCreate &i,
@@ -59,7 +75,9 @@ void interpret(const instruction::PromiseEnvironmentAssign &i,
                StrictnessState &state) {}
 
 void interpret(const instruction::PromiseExpressionLookup &i,
-               StrictnessState &state) {}
+               StrictnessState &state) {
+    state.metaprogram_promise(i.get_id());
+}
 
 void interpret(const instruction::PromiseExpressionAssign &i,
                StrictnessState &state) {}
@@ -78,8 +96,6 @@ StrictnessState interpret(const instruction::Stream &stream) {
         ++i;
     }
 
-    std::cerr << state;
-
     return state;
 }
-}
+} // namespace analysis::strictness

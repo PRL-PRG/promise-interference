@@ -55,7 +55,7 @@ class Begin {
 
 using node_t =
     std::variant<Begin, PromiseCreate, PromiseForce, EnvironmentAction>;
-}
+} // namespace analysis::strictness
 
 inline std::ostream &
 operator<<(std::ostream &os,

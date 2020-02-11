@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <string>
+#include <unordered_set>
 #include <utility>
 
 using opcode_t = std::string;
@@ -107,4 +108,7 @@ inline std::size_t count_instructions(const char *begin, const char *end) {
     }
     return line_count;
 }
+
+std::string concatenate(const std::unordered_set<std::string> &str_vec);
+
 #endif /* PROMISE_INTERFERENCE_UTILITIES_H */

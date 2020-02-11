@@ -52,3 +52,13 @@ void munmap_file(void *data, std::size_t size) {
         exit(EXIT_FAILURE);
     }
 }
+
+std::string concatenate(const std::unordered_set<std::string> &str_vec) {
+    std::string result;
+    for (const std::string &str : str_vec) {
+        result = result + str + ",";
+    }
+
+    result.pop_back();
+    return result;
+}

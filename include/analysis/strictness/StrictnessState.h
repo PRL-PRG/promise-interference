@@ -1,9 +1,10 @@
 #ifndef PROMISE_INTERFERENCE_ANALYSIS_STRICTNESS_STRICTNESS_STATE_H
 #define PROMISE_INTERFERENCE_ANALYSIS_STRICTNESS_STRICTNESS_STATE_H
 
-#include "node.h"
+#include "CallNode.h"
+#include "PromiseNode.h"
 #include "utilities.h"
-//#include <iostream>
+#include <iostream>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -24,232 +25,276 @@
 namespace analysis::strictness {
 class StrictnessState {
   public:
-    std::size_t UNDEFINED_INDEX = std::numeric_limits<std::size_t>::max();
-    StrictnessState() : nodes_{{Begin{}}}, previous_{{0}} {}
+    // std::size_t UNDEFINED_INDEX = std::numeric_limits<std::size_t>::max();
+    StrictnessState() {}
 
-    void define_variable(const variable_id_t variable_id) {
-        writes_.insert(variable_id);
-    }
-
-    void assign_variable(const variable_id_t variable_id) {
-        writes_.insert(variable_id);
-    }
-
-    void lookup_variable(const variable_id_t variable_id) {
-        reads_.insert(variable_id);
-    }
-
-    void remove_variable(const variable_id_t variable_id) {
-        writes_.insert(variable_id);
-    }
-
-    // TODO - connect this with edges as well.
-    std::size_t add_environment_action_node() {
-        auto index{UNDEFINED_INDEX};
-
-        if (reads_.size() != 0 || writes_.size() != 0) {
-            nodes_.push_back(EnvironmentAction{reads_, writes_});
-            index = nodes_.size() - 1;
-            add_edge(previous_.back(), index);
-            previous_[previous_.size() - 1] = index;
-            add_read_write_edges();
-            add_write_read_edges();
-            reads_.clear();
-            writes_.clear();
+    // create edge and update variable writer
+    void write_variable(const variable_id_t variable_id,
+                        const variable_name_t &variable_name) {
+        /* if stack is empty, it means that side effects are happening at a
+         * global level and there is no context to deal with. */
+        if (stack_.empty()) {
+            return;
         }
 
-        return index;
+        /* since the current context is writing to the variable, it has to be
+         * placed after any parent context that either read from or wrote to the
+         * variable. We want to retain order of variable read-write and
+         * write-write */
+
+        Node *current_context = stack_.back();
+        std::vector<Node *> &user_seq = users_[variable_id];
+        if (user_seq.size() != 0) {
+            Node *user_context = user_seq.back();
+            /* create edge iff the two nodes are different */
+            if (user_context != current_context) {
+                user_context->add_edge(current_context)
+                    .get_annotation()
+                    .get_write_variables()
+                    .insert(variable_name);
+            }
+        }
+
+        /* we have to add the current context as one of the writers and
+         * users of this variable for future consideration.*/
+        writers_[variable_id].push_back(stack_.back());
+        user_seq.push_back(stack_.back());
     }
 
-    void create_promise(const promise_id_t promise_id) {
-        const auto &index{add_environment_action_node()};
+    // create edge and update variable reader
+    void read_variable(const variable_id_t variable_id,
+                       const variable_name_t &variable_name) {
+        /* if stack is empty, it means that side effects are happening at a
+         * global level and there is no context to deal with. */
+        if (stack_.empty()) {
+            return;
+        }
 
-        nodes_.push_back(PromiseCreate{promise_id});
+        /* since the current context is reading from the variable, it has to be
+         * placed after any parent context that wrote to the
+         * variable. We want to retain order of variable write-read. The order
+         * of variable read-read is not important. */
 
-        promise_creation_index_[promise_id] = nodes_.size() - 1;
+        Node *current_context = stack_.back();
+        std::vector<Node *> &writer_seq = writers_[variable_id];
+        if (writer_seq.size() != 0) {
+            Node *writer_context = writer_seq.back();
+            /* create edge iff the two nodes are different */
+            if (writer_context != current_context) {
+                writer_context->add_edge(current_context)
+                    .get_annotation()
+                    .get_read_variables()
+                    .insert(variable_name);
+            }
+        }
 
-        add_edge(previous_.back(), nodes_.size() - 1);
-        // a new promise has been created, so this is the previous
-        // node to which we will connect upcoming creation points
-        // and environment nodes.
-        previous_[previous_.size() - 1] = nodes_.size() - 1;
+        /* we have to add the current context as one of the writers and
+         * users of this variable for future consideration.*/
+        readers_[variable_id].push_back(stack_.back());
+        users_[variable_id].push_back(stack_.back());
+    }
+
+    PromiseNode *create_promise(const promise_id_t promise_id) {
+        PromiseNode *promise = new PromiseNode(promise_id);
+
+        promises_.push_back(promise);
+
+        promise_map_[promise_id] = promise;
+
+        return promise;
+    }
+
+    PromiseNode *get_or_create_promise(const promise_id_t promise_id) {
+        auto iter = promise_map_.find(promise_id);
+
+        if (iter == promise_map_.end()) {
+            return create_promise(promise_id);
+        }
+
+        return iter->second;
+    }
+
+    void associate_promise(promise_id_t promise_id, call_id_t call_id,
+                           int formal_paramter_position,
+                           const variable_name_t &variable_name) {
+        Node *node = stack_.back();
+
+        if (node->is_promise()) {
+            std::cerr << "Promise encountered on stack on function exit";
+            exit(EXIT_FAILURE);
+        }
+
+        CallNode *call = static_cast<CallNode *>(node);
+
+        if (call->get_call_id() != call_id) {
+            std::cerr
+                << "Function entry call id mismatches function exit call id.";
+            exit(EXIT_FAILURE);
+        }
+
+        PromiseNode *promise = get_or_create_promise(promise_id);
+        promise->set_parameter_name(variable_name);
+        promise->set_formal_parameter_position(formal_paramter_position);
+        call->add_edge(promise).set_type(Edge::Type::Argument);
+        call->add_argument(promise);
     }
 
     void enter_promise(const promise_id_t promise_id) {
-        add_environment_action_node();
-        nodes_.push_back(PromiseForce{promise_id});
-        scope_.push_back(nodes_.size() - 1);
-        previous_.push_back(nodes_.size() - 1);
+        PromiseNode *promise = get_or_create_promise(promise_id);
 
-        const auto &promise_creation_index{
-            get_promise_creation_index(promise_id)};
+        promise->set_forced();
 
-        if (promise_creation_index != UNDEFINED_INDEX) {
-            add_edge(promise_creation_index, nodes_.size() - 1);
-        }
+        stack_.push_back(promise);
     }
 
     void exit_promise(const promise_id_t promise_id) {
-        add_environment_action_node();
-        const auto &node_index{scope_.back()};
-        const auto &promise_force{std::get<PromiseForce>(nodes_[node_index])};
-        if (promise_force.get_promise_id() != promise_id) {
+        Node *node = stack_.back();
+
+        if (node->is_call()) {
+            std::cerr << "Function encountered on stack on promise exit";
+            exit(EXIT_FAILURE);
+        }
+
+        PromiseNode *promise = static_cast<PromiseNode *>(node);
+
+        if (promise->get_promise_id() != promise_id) {
             std::cerr << "Promise entry id mismatches promise exit id.";
             exit(EXIT_FAILURE);
         }
-        scope_.pop_back();
-        previous_.pop_back();
+
+        stack_.pop_back();
     }
 
-    void add_write_read_edges() {
-        for (auto const variable_id : writes_) {
-            const auto reader_index{get_last_reader(variable_id)};
-            // If no one has read from this variable before, there are
-            // no write edges to be made because there is nothing
-            // constraining this promise from moving up and affecting
-            // the read of the variable in question.
-            if (reader_index == UNDEFINED_INDEX)
-                continue;
+    void metaprogram_promise(const promise_id_t promise_id) {
+        PromiseNode *promise = get_or_create_promise(promise_id);
 
-            // If we didn't bail out in the previous check, it means
-            // that the variable has been read from before and we know the
-            // index of the object in the node vector which represents
-            // that read. Now, we need to make sure that moving this
-            // promise does not affect the read of this variable. The
-            // only way this can happen is that this promise always
-            // stays below the point where the variable was read
-            // because once the variable is read, writes made to it
-            // by this promise will not affect that read.
+        promise->set_metaprogrammed();
+    }
 
-            // First we find the promise which caused the writes.
-            // To do that, we lookup the scope that gives an index
-            // into the nodes_ vector to a PromiseForce node. We
-            // know that this is always a PromiseForce node because
-            // all insertions into the scope_ vector are indices
-            // to PromiseForce objects added to nodes_ vector.
-            // Furthermore, nodes vector is only appended to, thus
-            // this index always remains valid.
-            const auto &promise_force_index{scope_.back()};
+    void enter_function(const function_id_t &function_id,
+                        const call_id_t call_id,
+                        const std::string &function_names) {
+        CallNode *call = new CallNode(call_id, function_id, function_names);
 
-            // Now, our aim is to make edges. We know the read point
-            // of the variable. We also know that the promise in question
-            // is writing to this variable. Clearly there is an edge
-            // between this promise and the read point.
-            add_edge(reader_index, promise_force_index);
+        calls_.push_back(call);
+
+        Node *caller = nullptr;
+
+        if (!stack_.empty()) {
+            caller = stack_.back();
         }
-    }
 
-    void add_read_write_edges() {
-        for (auto const variable_id : reads_) {
-            const auto writer_index{get_last_writer(variable_id)};
-            // If no one has written to this variable before, there are
-            // no lookup edges to be made because there is nothing
-            // constraining this promise from moving up and reading
-            // a different value of the variable in question.
-            if (writer_index == UNDEFINED_INDEX)
-                continue;
-
-            // If we didn't bail out in the previous check, it means
-            // that the variable has been written to before and we know
-            // the index of the object in the node vector which represents
-            // that write. Now, we need to make sure that moving this
-            // promise does not cause it to read a difference value of
-            // this variable. The
-            // only way this can happen is that this promise always
-            // stays below the point where the variable was written to.
-
-            // First we find the promise which caused the read.
-            // To do that, we lookup the scope that gives an index
-            // into the nodes_ vector to a PromiseForce node. We
-            // know that this is always a PromiseForce node because
-            // all insertions into the scope_ vector are indices
-            // to PromiseForce objects added to nodes_ vector.
-            // Furthermore, nodes vector is only appended to, thus
-            // this index always remains valid.
-            const auto &promise_force_index{scope_.back()};
-
-            // Now, our aim is to make edges. We know the write point
-            // of the variable. We also know that the promise in question
-            // is reading this variable. Clearly there is an edge
-            // between the write point and this promise.
-            add_edge(writer_index, promise_force_index);
+        if (caller != nullptr) {
+            caller->add_edge(call).set_type(Edge::Type::Call);
         }
+
+        stack_.push_back(call);
     }
 
-    void add_edge(std::size_t parent, std::size_t child) {
-        edges_[parent].insert(child);
-        // if (iter == edges_.end) {
-        //     std::cerr << "Id " << parent << " not found in edges." <<
-        //     std::endl;
-        //     exit(EXIT_FAILURE);
-        // }
-        // iter->second.insert(child);
-    }
+    void exit_function(const call_id_t call_id) {
+        Node *node = stack_.back();
 
-    std::size_t get_last_reader(const variable_id_t variable_id) {
-        auto iter{last_reader_.find(variable_id)};
-        if (iter == last_reader_.end())
-            return UNDEFINED_INDEX;
-        return iter->second;
-    }
-
-    std::size_t get_last_writer(const variable_id_t variable_id) {
-        auto iter{last_writer_.find(variable_id)};
-        if (iter == last_writer_.end())
-            return UNDEFINED_INDEX;
-        return iter->second;
-    }
-
-    std::size_t get_promise_creation_index(const promise_id_t promise_id) {
-        auto iter{promise_creation_index_.find(promise_id)};
-        if (iter == promise_creation_index_.end())
-            return UNDEFINED_INDEX;
-        return iter->second;
-    }
-
-    int largest() {
-        int max = 0;
-        for (const auto &kv : edges_) {
-            if (kv.second.size() > max)
-                max = kv.second.size();
+        if (node->is_promise()) {
+            std::cerr << "Promise encountered on stack on function exit";
+            exit(EXIT_FAILURE);
         }
-        return max;
+
+        CallNode *call = static_cast<CallNode *>(node);
+
+        if (call->get_call_id() != call_id) {
+            std::cerr
+                << "Function entry call id mismatches function exit call id.";
+            exit(EXIT_FAILURE);
+        }
+
+        stack_.pop_back();
     }
 
-    std::unordered_map<std::size_t, std::unordered_set<std::size_t>>
-    get_edges() const {
-        return edges_;
+    std::string indent(int indentation) const {
+        return std::string(indentation, ' ');
     }
 
-    const node_t &get_node(std::size_t index) const { return nodes_[index]; }
+    void to_dot(std::ostream &os) const {
 
-    void topological_sort() {
-        std::vector<std::size_t> s{{0}};
-        while (!s.empty()) {
-            const auto parent{s.back()};
-            s.pop_back();
-            result.push_back(parent);
-            for (const auto &child : edges_[parent]) {
+        os << "digraph {" << std::endl;
+
+        os << indent(4) << "{ /* nodes */" << std::endl;
+
+        for (const CallNode *call : calls_) {
+            os << indent(8);
+            call->to_dot(os);
+        }
+
+        for (const PromiseNode *promise : promises_) {
+            os << indent(8);
+            promise->to_dot(os);
+        }
+
+        os << indent(4) << "}" << std::endl << std::endl;
+
+        os << indent(4) << "{ /* edges */" << std::endl;
+
+        for (const CallNode *call : calls_) {
+            for (const Edge &edge : call->get_edges()) {
+                os << indent(8);
+                edge.to_dot(os);
             }
         }
+
+        for (const PromiseNode *promise : promises_) {
+            for (const Edge &edge : promise->get_edges()) {
+                os << indent(8);
+                edge.to_dot(os);
+            }
+        }
+
+        os << indent(4) << "}" << std::endl << std::endl;
+
+        os << indent(4) << "/* clusters */" << std::endl << std::endl;
+
+        for (const CallNode *call : calls_) {
+
+            os << indent(4) << "subgraph cluster_" << call->get_call_id()
+               << " {" << std::endl;
+
+            os << indent(8) << "label="
+               << "<" << call->get_call_id() << "<br/>"
+               << "<font point-size='10'>" << call->get_function_id()
+               << "</font>"
+               << "<br/>" << call->get_function_names() << ">"
+               << ";" << std::endl;
+
+            os << indent(8) << call->get_dot_node_name() << "; ";
+
+            for (const PromiseNode *promise : call->get_arguments()) {
+                os << promise->get_dot_node_name() << "; ";
+            }
+
+            os << std::endl;
+
+            os << indent(4) << "}" << std::endl;
+        }
+
+        os << "}" << std::endl;
     }
 
   private:
-    std::unordered_set<variable_id_t> reads_;
-    std::unordered_set<variable_id_t> writes_;
-    std::unordered_map<std::size_t, std::unordered_set<std::size_t>> edges_;
-    std::unordered_map<variable_id_t, std::size_t> last_writer_;
-    std::unordered_map<variable_id_t, std::size_t> last_reader_;
-    std::vector<std::size_t> scope_;
-    std::vector<node_t> nodes_;
-    std::vector<std::size_t> previous_;
-    std::unordered_map<promise_id_t, std::size_t> promise_creation_index_;
+    std::vector<Node *> stack_;
+    std::vector<CallNode *> calls_;
+    std::vector<PromiseNode *> promises_;
+    std::unordered_map<variable_id_t, std::vector<Node *>> readers_;
+    std::unordered_map<variable_id_t, std::vector<Node *>> writers_;
+    std::unordered_map<variable_id_t, std::vector<Node *>> users_;
+    std::unordered_map<promise_id_t, PromiseNode *> promise_map_;
 };
 } // namespace analysis::strictness
 
 inline std::ostream &
 operator<<(std::ostream &os,
            const analysis::strictness::StrictnessState &state) {
+
+    state.to_dot(os);
+    /*
     for (const auto &kv : state.get_edges()) {
         os << state.get_node(kv.first) << " : ";
         for (const auto &value : kv.second) {
@@ -257,6 +302,7 @@ operator<<(std::ostream &os,
         }
         os << std::endl;
     }
+    */
     return os;
 }
 
