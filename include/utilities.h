@@ -53,6 +53,10 @@ inline function_id_t parse_function_id(const char *begin, char **end) {
     return parse_upto_separator(begin, end);
 }
 
+inline std::string parse_function_names(const char *begin, char **end) {
+    return parse_upto_separator(begin, end);
+}
+
 inline sexp_type_t parse_sexp_type(const char *begin, char **end) {
     return parse_upto_separator(begin, end);
 }

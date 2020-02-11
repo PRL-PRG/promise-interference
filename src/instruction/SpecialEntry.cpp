@@ -19,8 +19,12 @@ SpecialEntry SpecialEntry::parse_arguments(const char *begin, char **end) {
 
     environment_id_t environment_id{parse_environment_id(*end, end)};
 
+    parse_operand_separator(*end, end);
+
+    std::string function_names{parse_function_names(*end, end)};
+
     parse_instruction_separator(*end, end);
 
-    return SpecialEntry{type, id, call_id, environment_id};
+    return SpecialEntry{id, call_id, environment_id, function_names};
 }
 } // namespace instruction
