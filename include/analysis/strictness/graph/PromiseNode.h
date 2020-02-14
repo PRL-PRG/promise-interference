@@ -6,13 +6,16 @@
 
 namespace analysis::strictness::graph {
 
+class CallNode;
+
 class PromiseNode : public Node {
   public:
     explicit PromiseNode(promise_id_t promise_id)
         : Node(Node::Type::Promise), promise_id_(promise_id), forced_(false),
           metaprogrammed_(false),
           dot_node_name_("p_" + std::to_string(promise_id)),
-          parameter_name_("?"), formal_parameter_position_(-1) {}
+          parameter_name_("?"), formal_parameter_position_(-1),
+          parent_call_(nullptr) {}
 
     promise_id_t get_promise_id() const { return promise_id_; }
 
@@ -39,6 +42,12 @@ class PromiseNode : public Node {
     const int get_formal_parameter_position() const {
         return formal_parameter_position_;
     }
+
+    void set_parent_call(CallNode *parent_call) { parent_call_ = parent_call; }
+
+    CallNode *get_parent_call() { return parent_call_; }
+
+    const CallNode *get_parent_call() const { return parent_call_; }
 
     const std::string &get_dot_node_name() const override {
         return dot_node_name_;
@@ -79,6 +88,7 @@ class PromiseNode : public Node {
     const std::string dot_node_name_;
     variable_name_t parameter_name_;
     int formal_parameter_position_;
+    CallNode *parent_call_;
 };
 
 } // namespace analysis::strictness::graph

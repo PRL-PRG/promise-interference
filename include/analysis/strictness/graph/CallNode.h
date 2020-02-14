@@ -14,7 +14,7 @@ class CallNode : public Node {
                       const std::string &function_names)
         : Node(Node::Type::Call), call_id_(call_id), function_id_(function_id),
           function_names_(function_names),
-          dot_node_name_("c_" + std::to_string(call_id)) {}
+          dot_node_name_("c_" + std::to_string(call_id)), caller_(nullptr) {}
 
     call_id_t get_call_id() const { return call_id_; }
 
@@ -25,6 +25,12 @@ class CallNode : public Node {
     }
 
     const std::string &get_function_names() const { return function_names_; }
+
+    void set_caller(Node *caller) { caller_ = caller; }
+
+    Node *get_parent_call() { return caller_; }
+
+    const Node *get_parent_call() const { return caller_; }
 
     void to_dot(std::ostream &os) const override {
         os << get_dot_node_name();
@@ -46,6 +52,7 @@ class CallNode : public Node {
     const function_id_t function_id_;
     const std::string function_names_;
     const std::string dot_node_name_;
+    Node *caller_;
     std::vector<PromiseNode *> arguments_;
 };
 

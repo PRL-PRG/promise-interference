@@ -133,6 +133,7 @@ class StrictnessState {
         }
 
         graph::PromiseNode *promise = get_or_create_promise(promise_id);
+        promise->set_parent_call(call);
         promise->set_parameter_name(variable_name);
         promise->set_formal_parameter_position(formal_paramter_position);
         call->add_edge(promise).set_type(graph::Edge::Type::Argument);
@@ -187,6 +188,7 @@ class StrictnessState {
 
         if (caller != nullptr) {
             caller->add_edge(call).set_type(graph::Edge::Type::Call);
+            call->set_caller(caller);
         }
 
         stack_.push_back(call);
